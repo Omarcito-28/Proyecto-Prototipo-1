@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Todas las Citas - Administración</title>
+</head>
+<body>
+
+<div layout:fragment="contentFragment" class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Todas las Citas del Sistema</h2>
+        <!-- <a th:href="@{/appointments/new}" class="btn btn-primary">Agendar Nueva Cita (Admin)</a> -->
+        <!-- Considerar si admin puede agendar para otros -->
+    </div>
+
+    <!-- TODO: Filtros para las citas (por fecha, estilista, cliente, estado) -->
+
+    <div th:if="${appointments.isEmpty()}">
+        <p>No hay citas registradas en el sistema.</p>
+    </div>
+
+    <div class="table-responsive" th:if="${!appointments.isEmpty()}">
+        <table class="table table-striped table-hover table-sm">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha y Hora</th>
+                    <th>Servicio</th>
+                    <th>Cliente</th>
+                    <th>Estilista</th>
+                    <th>Estado</th>
+                    <th>Agendada el</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="apt : ${appointments}" th:classappend="${apt.status.name() == 'CANCELLED_BY_CLIENT' or apt.status.name() == 'CANCELLED_BY_STYLIST' or apt.status.name() == 'CANCELLED_BY_ADMIN' ? 'table-danger' : ''}">
+                    <td th:text="${apt.id}"></td>
+                    <td th:text="${#temporals.format(apt.appointmentDateTime, 'dd/MM/yy HH:mm')}"></td>
+                    <td th:text="${apt.service.name}"></td>
+                    <td>
+                        <span th:text="${apt.client.fullName}"></span><br>
+                        <small th:text="${apt.client.username}"></small>
+                    </td>
+                    <td>
+                        <span th:text="${apt.stylist.fullName}"></span><br>
+                        <small th:text="${apt.stylist.username}"></small>
+                    </td>
+                    <td>
+                        <span class="badge" th:with="status=${apt.status.name()}"
+                            <span th:classappend="${status == 'SCHEDULED' ? 'bg-primary' : 
+                                             (status == 'COMPLETED' ? 'bg-success' : 
+                                             (status == 'CANCELLED_BY_CLIENT' or 
+                                              status == 'CANCELLED_BY_STYLIST' or 
+                                              status == 'CANCELLED_BY_ADMIN' ? 'bg-danger' : 'bg-warning'))}">
+                                <span th:text="${status == 'SCHEDULED' ? 'Programada' : 
+                                               (status == 'COMPLETED' ? 'Completada' : 
+                                               (status == 'CANCELLED_BY_CLIENT' ? 'Cancelada por Cliente' : 
+                                               (status == 'CANCELLED_BY_STYLIST' ? 'Cancelada por Estilista' : 
+                                               (status == 'CANCELLED_BY_ADMIN' ? 'Cancelada por Admin' : 'N/A'))))}"></span>
+                        </span>
+                    </td>
+                    <td th:text="${apt.createdAt != null ? #temporals.format(apt.createdAt, 'dd/MM/yy HH:mm') : 'N/A'}"></td>
+                    <td>
+                        <a th:href="@{/appointments/{id}(id=${apt.id})}" class="btn btn-sm btn-info mb-1">Detalles</a>
+                        <!-- Más acciones de admin como editar, cambiar estado, etc. -->
+                        <!-- Ejemplo: 
+                        <form th:action="@{/admin/appointments/{id}/updateStatus(id=${apt.id})}" method="post" class="d-inline-block">
+                            <select name="newStatus" class="form-select form-select-sm d-inline-block" style="width: auto;" onchange="this.form.submit()">
+                                <option value="">Cambiar estado...</option>
+                                <option th:each="s : ${T(com.essencedetoi.model.AppointmentStatus).values()}" 
+                                        th:value="${s}" th:text="${s.displayName}" 
+                                        th:selected="${s == apt.status}"> 
+                                </option>
+                            </select>
+                             <noscript><button type="submit" class="btn btn-sm btn-warning">OK</button></noscript>
+                        </form>
+                         -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- TODO: Paginación si hay muchas citas -->
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+/* Estilos personalizados para Essence De Toi */
+
+body {
+    padding-top: 70px; /* Ajuste para la navbar fija un poco más alto */
+    padding-bottom: 70px; /* Ajuste para el footer fijo un poco más alto */
+    background-color: #f8f9fa; /* Un color de fondo suave para el body */
+}
+
+.footer {
+    background-color: #e9ecef; /* Un color ligeramente diferente para el footer */
+}
+
+.card-header {
+    background-color: #343a40; /* Encabezados de tarjeta oscuros */
+    color: white;
+}
+
+.btn-primary {
+    background-color: #5e3d7c; /* Un tono púrpura para el botón primario */
+    border-color: #5e3d7c;
+}
+
+.btn-primary:hover {
+    background-color: #4a2f62;
+    border-color: #4a2f62;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Espaciado para los mensajes globales */
+.container > .alert {
+    margin-top: 1rem;
+}
+
+/* Mejorar la apariencia de las tablas */
+.table {
+    margin-top: 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.table thead th {
+    background-color: #e9ecef;
+    border-bottom-width: 2px;
+}
+

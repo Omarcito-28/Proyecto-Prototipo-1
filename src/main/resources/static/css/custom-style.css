@@ -1,0 +1,273 @@
+/* Importar fuentes de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;700&display=swap');
+
+/* Paleta de colores y variables */
+:root {
+    --primary-color: #996515; /* Marrón dorado (Encabezados) */
+    --secondary-color: #FFB6C1; /* Rosa Pálido (Fondo Principal) */
+    --accent-color: #FFD700;   /* Dorado claro (Acentos/Botones) */
+    --text-color: #000000;     /* Negro (Texto Principal) */
+    --text-light: #4A4A4A;    /* Gris Oscuro (Texto Secundario) */
+    --content-bg-light: #FDF6F8; /* Blanco Opaco para Contenido */
+    --navbar-bg: var(--content-bg-light);     /* Blanco Opaco (Navbar) */
+    --navbar-text: var(--text-color); /* Negro para texto en Navbar Blanca */
+    --navbar-link-hover: var(--accent-color); /* Dorado Claro para hover en navbar */
+    --footer-bg: #000000;   /* Negro (Footer) */
+    --footer-text: #FFD700;  /* Dorado Claro para texto de footer */
+
+    --font-primary: 'Playfair Display', serif;
+    --font-secondary: 'Montserrat', sans-serif;
+
+    /* Enlazar colores personalizados con variables de Bootstrap */
+    --bs-primary: var(--primary-color);
+    --bs-primary-rgb: 153, 101, 21; /* Corresponde a #996515 (marrón dorado) */
+}
+
+body {
+    font-family: var(--font-secondary);
+    background-image: url('../images/marble-background.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* Efecto parallax */
+    background-color: var(--content-bg-light); /* Color de fallback más suave y coherente */
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-primary);
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+/* Sobrescribir estilos específicos para btn-outline-primary */
+.btn-outline-primary {
+  --bs-btn-color: var(--primary-color);               /* Color del texto */
+  --bs-btn-border-color: var(--primary-color);        /* Color del borde */
+  --bs-btn-hover-color: var(--content-bg-light);      /* Color texto al pasar el mouse (usamos el fondo claro) */
+  --bs-btn-hover-bg: var(--primary-color);            /* Color fondo al pasar el mouse */
+  --bs-btn-hover-border-color: var(--primary-color); /* Color borde al pasar el mouse */
+  --bs-btn-active-color: var(--content-bg-light);     /* Color texto al hacer clic */
+  --bs-btn-active-bg: var(--primary-color);           /* Color fondo al hacer clic */
+  --bs-btn-active-border-color: var(--primary-color);/* Color borde al hacer clic */
+  --bs-btn-disabled-color: var(--primary-color);      /* Color texto deshabilitado */
+  --bs-btn-disabled-border-color: var(--primary-color);/* Color borde deshabilitado */
+}
+
+/* Ajuste adicional para que el color del texto no se pierda con el fondo al hacer hover */
+.btn-outline-primary:hover {
+    color: var(--bs-btn-hover-color) !important; /* Asegurar que el texto cambie a claro */
+}
+
+/* ---- Navbar Styles ---- */
+.navbar {
+    position: sticky; /* Fijar la navbar al hacer scroll */
+    top: 0;           /* Posicionarla en la parte superior */
+    z-index: 1030;    /* Asegurar que esté sobre otros elementos (valor común de Bootstrap) */
+    background-color: var(--navbar-bg); /* Asegurar que tenga fondo */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Sombra sutil opcional */
+}
+
+.navbar-brand {
+    font-family: var(--font-primary);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.navbar .nav-link {
+    color: var(--navbar-text);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: var(--navbar-link-hover);
+}
+
+/* Ajuste para el contenedor principal para que no quede oculto por la navbar sticky */
+.main-container {
+    padding-top: 70px; /* Ajusta este valor si la altura de tu navbar es diferente */
+}
+
+/* Botones */
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px; /* Bordes redondeados suaves */
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-secondary {
+    background-color: var(--text-light);
+    border-color: var(--text-light);
+    color: #fff;
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 20px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
+
+
+/* Estilos para la barra de navegación */
+.navbar {
+    background-color: var(--navbar-bg) !important; /* Usar !important para sobreescribir Bootstrap si es necesario */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.navbar-brand {
+    font-family: var(--font-primary);
+    font-size: 1.75rem;
+    color: var(--primary-color) !important;
+}
+
+.navbar-nav .nav-link {
+    color: var(--navbar-text) !important;
+    font-family: var(--font-secondary);
+    font-weight: 500;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active { /* Para el enlace activo */
+    color: var(--navbar-link-hover) !important;
+}
+
+/* Contenedor principal */
+.main-container {
+    padding-top: 20px;
+    padding-bottom: 60px; /* Espacio para el footer */
+}
+
+/* Footer */
+.footer {
+    background-color: var(--footer-bg);
+    color: var(--footer-text);
+    padding: 2rem 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.footer a {
+    color: var(--primary-color);
+}
+
+.footer a:hover {
+    color: var(--accent-color);
+}
+
+/* Mejoras para tablas */
+.table {
+    background-color: var(--content-bg-light); /* Fondo blanco opaco para las tablas */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.table thead.table-dark th { /* Personalizar el .table-dark de Bootstrap */
+    background-color: var(--primary-color);
+    color: #fff;
+    border-color: var(--primary-color); /* Para que los bordes coincidan */
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(212, 175, 185, 0.05); /* Un rosa muy muy sutil para las filas alternas */
+}
+
+.table-hover tbody tr:hover {
+    background-color: rgba(212, 175, 185, 0.15); /* Un poco más oscuro al pasar el mouse */
+}
+
+/* Estilos para tarjetas (cards) */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+    background-color: var(--content-bg-light); /* Fondo blanco opaco para tarjetas */
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    font-family: var(--font-primary);
+    font-size: 1.25rem;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid #ddd;
+    border-top-left-radius: 7px; /* Ajustar a border-radius de .card */
+    border-top-right-radius: 7px;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Formularios */
+.form-label {
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.form-control {
+    border-radius: 20px; /* Bordes redondeados suaves para inputs */
+    border: 1px solid #ced4da;
+    padding: 0.5rem 1rem;
+    background-color: var(--content-bg-light); /* Fondo blanco opaco para inputs */
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 0.2rem rgba(192, 132, 151, 0.25); /* Sombra de foco con el color de acento */
+}
+
+/* Alertas de Bootstrap personalizadas */
+.alert-primary {
+    background-color: var(--secondary-color);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+}
+.alert-success {
+    background-color: #e6f7e9; /* Verde pastel */
+    border-color: #c3e6cb;
+    color: #155724;
+}
+.alert-danger {
+    background-color: #f8d7da; /* Rojo pastel */
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+.alert-warning {
+    background-color: #fff3cd; /* Amarillo pastel */
+    border-color: #ffeeba;
+    color: #856404;
+}
+.alert-info {
+    background-color: #d1ecf1; /* Azul pastel */
+    border-color: #bee5eb;
+    color: #0c5460;
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Gestión de Usuarios - Essence De Toi</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Gestión de Usuarios</h2>
+        <!-- <a th:href="@{/admin/users/new}" class="btn btn-primary">Crear Nuevo Usuario</a> -->
+        <!-- La creación de usuarios se maneja por el registro público por ahora -->
+    </div>
+
+    <div th:if="${users.isEmpty()}">
+        <p>No hay usuarios registrados (aparte de los administradores iniciales, si aplica).</p>
+    </div>
+
+    <div class="table-responsive" th:if="${!users.isEmpty()}">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre de Usuario</th>
+                    <th>Nombre Completo</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Roles</th>
+                    <th>Habilitado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.fullName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.phoneNumber != null ? user.phoneNumber : 'N/A'}"></td>
+                    <td>
+                        <span th:each="role, iterStat : ${user.roles}" 
+                              th:text="${#strings.substring(role.name, 5)} + ${!iterStat.last ? ', ' : ''}" 
+                              class="badge bg-info me-1"></span>
+                    </td>
+                    <td>
+                        <span th:text="${user.enabled ? 'Sí' : 'No'}" 
+                              th:class="${user.enabled ? 'text-success' : 'text-danger'}"></span>
+                    </td>
+                    <td>
+                        <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-outline-primary">Editar Roles</a>
+                        <!-- Podría añadirse un botón para habilitar/deshabilitar -->
+                        <!-- 
+                        <form th:action="@{/admin/users/toggle-enabled/{id}(id=${user.id})}" method="post" style="display: inline-block;" onsubmit="return confirm('¿Estás seguro?');">
+                            <button type="submit" class="btn btn-sm"
+                                    th:classappend="${user.enabled ? 'btn-outline-warning' : 'btn-outline-success'}"
+                                    th:text="${user.enabled ? 'Deshabilitar' : 'Habilitar'}"></button>
+                        </form>
+                         -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

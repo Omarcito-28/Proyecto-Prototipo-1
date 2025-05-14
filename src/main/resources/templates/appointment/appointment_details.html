@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/layout}">
+<head>
+    <title th:text="'Detalles de la Cita #' + ${appointment.id}">Detalles de la Cita</title>
+    <style>
+        .details-card {
+            max-width: 800px;
+            margin: 40px auto;
+        }
+        .details-card .card-header {
+            font-size: 1.25rem;
+        }
+        .list-group-item strong {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="contentFragment" class="container mt-4">
+    <div class="card details-card">
+        <div class="card-header bg-dark text-white">
+            Detalles de la Cita #<span th:text="${appointment.id}"></span>
+        </div>
+        <div class="card-body">
+            <div th:if="${appointment == null}">
+                <div class="alert alert-warning">No se encontró la cita solicitada.</div>
+                <a th:href="@{/appointments/my}" class="btn btn-primary">Mis Citas</a>
+            </div>
+
+            <div th:if="${appointment != null}">
+                <h5 class="card-title">Información General</h5>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item">
+                        <strong>Servicio:</strong> <span th:text="${appointment.service.name}"></span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Fecha y Hora:</strong> <span th:text="${#temporals.format(appointment.appointmentDateTime, 'dd/MM/yyyy HH:mm')}"></span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Duración Estimada:</strong> <span th:text="${appointment.service.durationMinutes}"></span> minutos
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Precio del Servicio:</strong> COP $<span th:text="${#numbers.formatDecimal(appointment.service.price, 1, 'POINT', 2, 'COMMA')}"></span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Estado:</strong>
+                        <span class="badge" th:with="status=${appointment.status.name()}">
+                            <th:block th:switch="${status}">
+                                <span th:case="'SCHEDULED'" class="bg-primary">Programada</span>
+                                <span th:case="'COMPLETED'" class="bg-success">Completada</span>
+                                <span th:case="'CANCELLED_BY_CLIENT'" class="bg-danger">Cancelada por Cliente</span>
+                                <span th:case="'CANCELLED_BY_STYLIST'" class="bg-danger">Cancelada por Estilista</span>
+                                <span th:case="'CANCELLED_BY_ADMIN'" class="bg-danger">Cancelada por Admin</span>
+                                <span th:case="*" class="bg-warning">Desconocido</span>
+                            </th:block>
+                        </span>
+                    </li>
+                </ul>
+
+                <h5 class="card-title mt-4">Participantes</h5>
+                <ul class="list-group list-group-flush mb-4">
+                    <li class="list-group-item">
+                        <strong>Cliente:</strong> <span th:text="${appointment.client.fullName}"></span>
+                        (<a th:href="'mailto:' + ${appointment.client.email}" th:text="${appointment.client.email}"></a>)
+                        <span th:if="${appointment.client.phoneNumber}">, Tel: <span th:text="${appointment.client.phoneNumber}"></span></span>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Estilista:</strong> <span th:text="${appointment.stylist.fullName}"></span>
+                         (<a th:href="'mailto:' + ${appointment.stylist.email}" th:text="${appointment.stylist.email}"></a>)
+                    </li>
+                </ul>
+
+                <div th:if="${appointment.notes != null && !appointment.notes.isBlank()}">
+                    <h5 class="card-title mt-4">Notas Adicionales</h5>
+                    <p class="card-text" th:text="${appointment.notes}"></p>
+                </div>
+
+                <hr>
+
+                <!-- Acciones disponibles según el rol y estado -->
+                <div class="mt-4">
+                    <h5>Acciones Disponibles</h5>
+                    
+                    <!-- Botón para marcar como completada (solo visible para estilistas y admin cuando está programada) -->
+                    <div sec:authorize="hasAnyRole('STYLIST', 'ADMIN')" th:if="${appointment.status.name() == 'SCHEDULED'}" class="mb-3">
+                        <form th:action="@{/appointments/complete/{id}(id=${appointment.id})}" method="post" style="display: inline;">
+                            <button type="button" class="btn btn-success" data-bs-toggle="modal" th:attr="data-bs-target='#completeAppointmentModal-'+${appointment.id}">
+                                <i class="bi bi-check-circle"></i> Marcar como Completada
+                            </button>
+                        </form>
+
+                        <!-- Modal de Confirmación para Completar -->
+                        <div class="modal fade" th:id="'completeAppointmentModal-'+${appointment.id}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmar Finalización</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Está seguro que desea marcar esta cita como completada?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <form th:action="@{/appointments/complete/{id}(id=${appointment.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-success">Confirmar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botón para cancelar (solo visible para clientes cuando está programada) -->
+                    <div sec:authorize="hasRole('CLIENT')" th:if="${appointment.status.name() == 'SCHEDULED'}" class="mb-3">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" th:attr="data-bs-target='#cancelAppointmentModal-'+${appointment.id}">
+                            <i class="bi bi-x-circle"></i> Cancelar Cita
+                        </button>
+
+                        <!-- Modal de Confirmación para Cancelar -->
+                        <div class="modal fade" th:id="'cancelAppointmentModal-'+${appointment.id}" tabindex="-1" aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmar Cancelación</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Está seguro que desea cancelar esta cita?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <form th:action="@{/appointments/cancel/{id}(id=${appointment.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-warning">Sí, Cancelar</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acciones para el Admin -->
+                    <div sec:authorize="hasRole('ADMIN')" class="mt-3">
+                        <h6>Acciones de Administrador:</h6>
+                        <p class="text-muted">Próximamente: cambiar estado, reasignar estilista, etc.</p>
+                    </div>
+                </div>
+                <div sec:authorize="hasRole('CLIENT')" class="mt-3">
+                    <th:block th:if="${appointment.status.name() == 'SCHEDULED' or appointment.status.name() == 'PENDING_CONFIRMATION'}">
+                         <button type="button" class="btn btn-warning" data-bs-toggle="modal" 
+                                th:attr="data-bs-target='#cancelAppointmentModal-'+${appointment.id}">
+                            Cancelar Cita
+                        </button>
+                        <!-- Modal de Confirmación de Cancelación (Reutilizado o específico si se prefiere) -->
+                        <div class="modal fade" th:id="'cancelAppointmentModal-'+${appointment.id}" tabindex="-1" 
+                             aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Confirmar Cancelación</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de que deseas cancelar esta cita?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <form th:action="@{/appointments/cancel/{id}(id=${appointment.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger">Confirmar Cancelación</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </div>
+
+                <div class="mt-4">
+                    <a th:href="@{/appointments/my}" class="btn btn-outline-secondary">Volver a Mis Citas</a>
+                    <a th:href="@{/appointments/all}" sec:authorize="hasRole('ADMIN')" class="btn btn-outline-secondary ms-2">Ver Todas las Citas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

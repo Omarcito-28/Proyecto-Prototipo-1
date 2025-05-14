@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Mis Citas - Essence De Toi</title>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Mis Citas Programadas</h2>
+        <a th:href="@{/appointments/new}" class="btn btn-primary" sec:authorize="hasRole('CLIENT')">Agendar Nueva Cita</a>
+    </div>
+
+    <div th:if="${appointments.isEmpty()}">
+        <p>No tienes citas programadas.</p>
+        <p sec:authorize="hasRole('CLIENT')">¿Deseas <a th:href="@{/appointments/new}">agendar una nueva cita</a>?</p>
+    </div>
+
+    <div class="table-responsive" th:if="${!appointments.isEmpty()}">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>ID Cita</th>
+                <th>Fecha y Hora</th>
+                <th>Servicio</th>
+                <th sec:authorize="hasAnyRole('ADMIN', 'STYLIST')">Cliente</th>
+                <th sec:authorize="hasAnyRole('ADMIN', 'CLIENT')">Estilista</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="apt : ${appointments}">
+                <td th:text="${apt.id}"></td>
+                <td th:text="${#temporals.format(apt.appointmentDateTime, 'dd/MM/yyyy HH:mm')}"></td>
+                <td th:text="${apt.service.name}"></td>
+                <td sec:authorize="hasAnyRole('ADMIN', 'STYLIST')" th:text="${apt.client.fullName}"></td>
+                <td sec:authorize="hasAnyRole('ADMIN', 'CLIENT')" th:text="${apt.stylist.fullName}"></td>
+                <td>
+                    <span class="badge" th:with="status=${apt.status.name()}">
+                        <th:block th:switch="${status}">
+                            <span th:case="'SCHEDULED'" class="bg-primary">Programada</span>
+                            <span th:case="'COMPLETED'" class="bg-success">Completada</span>
+                            <span th:case="'CANCELLED_BY_CLIENT'" class="bg-danger">Cancelada por Cliente</span>
+                            <span th:case="'CANCELLED_BY_STYLIST'" class="bg-danger">Cancelada por Estilista</span>
+                            <span th:case="'CANCELLED_BY_ADMIN'" class="bg-danger">Cancelada por Admin</span>
+                            <span th:case="*" class="bg-warning">Desconocido</span>
+                        </th:block>
+                    </span>
+                </td>
+                <td>
+                    <a th:href="@{/appointments/{id}(id=${apt.id})}" class="btn btn-sm btn-info">Detalles</a>
+                    <!-- Más acciones como cancelar/reprogramar podrían ir aquí -->
+                    <th:block sec:authorize="hasRole('CLIENT')">
+                         <button th:if="${apt.status.name() == 'SCHEDULED' or apt.status.name() == 'PENDING_CONFIRMATION'}"
+                                type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" 
+                                th:attr="data-bs-target='#cancelAppointmentModal-'+${apt.id}">
+                            Cancelar
+                        </button>
+                        <!-- Modal de Confirmación de Cancelación -->
+                        <div class="modal fade" th:id="'cancelAppointmentModal-'+${apt.id}" tabindex="-1" 
+                             th:attr="aria-labelledby='cancelAppointmentModalLabel-' + ${apt.id}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" th:id="'cancelAppointmentModalLabel-' + ${apt.id}">Confirmar Cancelación</h5>
+                                        <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        ¿Estás seguro de que deseas cancelar la cita para el servicio "<span th:text="${apt.service.name}"></span>" 
+                                        programada para el <span th:text="${#temporals.format(apt.appointmentDateTime, 'dd/MM/yyyy ''at'' HH:mm')}"></span>?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                        <form th:action="@{/appointments/cancel/{id}(id=${apt.id})}" method="post" style="display: inline;">
+                                            <button type="submit" class="btn btn-danger">Confirmar Cancelación</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </th:block>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

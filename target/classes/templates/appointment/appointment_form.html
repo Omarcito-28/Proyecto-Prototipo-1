@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title th:text="${appointmentRequestDto.id == null} ? 'Agendar Nueva Cita' : 'Editar Cita'">Agendar Cita</title>
+    <style>
+        .appointment-form-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content" class="container">
+    <div class="appointment-form-container">
+        <h2 class="text-center mb-4" th:text="${appointmentRequestDto.id == null} ? 'Agendar Nueva Cita' : 'Editar Cita'">Agendar Cita</h2>
+
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+
+        <form th:action="@{/appointments/save}" th:object="${appointmentRequestDto}" method="post">
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <div th:each="err : ${#fields.globalErrors()}" th:text="${err}" class="alert alert-danger"></div>
+            </div>
+            <input type="hidden" th:if="${appointmentRequestDto.id != null}" th:field="*{id}"/>
+            <!-- El clientId se asignará en el controlador, no es necesario aquí si el usuario es el cliente -->
+            <!-- <input type="hidden" th:field="*{clientId}" /> -->
+
+            <div class="mb-3">
+                <label for="serviceId" class="form-label">Servicio:</label>
+                <select id="serviceId" th:field="*{serviceId}" class="form-select"
+                        th:classappend="${#fields.hasErrors('serviceId')} ? 'is-invalid' : ''" required>
+                    <option value="">Seleccione un servicio...</option>
+                    <option th:each="service : ${services}" th:value="${service.id}"
+                            th:text="${service.name + ' (' + service.durationMinutes + ' min, COP $' + #numbers.formatDecimal(service.price, 1, 'POINT', 2, 'COMMA') + ')'}"></option>
+                </select>
+                <div th:if="${#fields.hasErrors('serviceId')}" th:errors="*{serviceId}" class="invalid-feedback"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="stylistId" class="form-label">Estilista:</label>
+                <select id="stylistId" th:field="*{stylistId}" class="form-select"
+                        th:classappend="${#fields.hasErrors('stylistId')} ? 'is-invalid' : ''" required>
+                    <option value="">Seleccione un estilista...</option>
+                    <option th:each="stylist : ${stylists}" th:value="${stylist.id}" th:text="${stylist.fullName}"></option>
+                </select>
+                <div th:if="${#fields.hasErrors('stylistId')}" th:errors="*{stylistId}" class="invalid-feedback"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="appointmentDateTime" class="form-label">Fecha y Hora de la Cita:</label>
+                <input type="datetime-local" id="appointmentDateTime" th:field="*{appointmentDateTime}" class="form-control"
+                       th:classappend="${#fields.hasErrors('appointmentDateTime')} ? 'is-invalid' : ''" required>
+                <div th:if="${#fields.hasErrors('appointmentDateTime')}" th:errors="*{appointmentDateTime}" class="invalid-feedback"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="notes" class="form-label">Notas Adicionales (Opcional):</label>
+                <textarea id="notes" th:field="*{notes}" class="form-control"
+                          th:classappend="${#fields.hasErrors('notes')} ? 'is-invalid' : ''" rows="3"></textarea>
+                <div th:if="${#fields.hasErrors('notes')}" th:errors="*{notes}" class="invalid-feedback"></div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                 <a th:href="@{${appointmentRequestDto.id == null ? '/appointments/my' : '/appointments/details/' + appointmentRequestDto.id}}" class="btn btn-secondary me-md-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Agendar Cita</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

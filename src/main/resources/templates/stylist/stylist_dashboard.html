@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Dashboard de Estilista - Essence De Toi</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container py-4">
+        <!-- Bienvenida -->
+        <h2 class="mb-4">Panel de Estilista - <span th:text="${currentUser.fullName}">Estilista</span></h2>
+
+        <!-- Citas del Día -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title h5 mb-0">Citas de Hoy</h3>
+            </div>
+            <div class="card-body">
+                <div th:if="${todayAppointments.empty}" class="text-center py-3">
+                    <p>No tienes citas programadas para hoy.</p>
+                </div>
+                <div th:unless="${todayAppointments.empty}" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Hora</th>
+                                <th>Cliente</th>
+                                <th>Servicio</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="appointment : ${todayAppointments}">
+                                <td th:text="${#temporals.format(appointment.appointmentDateTime, 'HH:mm')}">10:00</td>
+                                <td th:text="${appointment.client.fullName}">Cliente</td>
+                                <td th:text="${appointment.service.name}">Servicio</td>
+                                <td>
+                                    <span th:class="${appointment.status == 'PENDING' ? 'badge bg-warning' : 
+                                                    appointment.status == 'COMPLETED' ? 'badge bg-success' : 
+                                                    appointment.status == 'CANCELLED' ? 'badge bg-danger' : 'badge bg-secondary'}"
+                                          th:text="${appointment.status}">Estado</span>
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a th:href="@{/appointments/view/{id}(id=${appointment.id})}" 
+                                           class="btn btn-sm btn-info">Ver Detalles</a>
+                                        <button th:if="${appointment.status == 'PENDING'}"
+                                                class="btn btn-sm btn-success"
+                                                onclick="markAsCompleted(this)"
+                                                th:data-appointment-id="${appointment.id}">
+                                            Completar
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resumen y Acciones -->
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Resumen de la Semana</h5>
+                        <div class="list-group list-group-flush">
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Citas Pendientes
+                                <span class="badge bg-primary rounded-pill" th:text="${todayAppointments.size()}">0</span>
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                Citas Completadas
+                                <span class="badge bg-success rounded-pill">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Acciones Rápidas</h5>
+                        <div class="d-grid gap-2">
+                            <a th:href="@{/appointments/my}" class="btn btn-outline-primary">Ver Todas mis Citas</a>
+                            <a th:href="@{/profile}" class="btn btn-outline-secondary">Actualizar Perfil</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts específicos para el dashboard de estilista -->
+<th:block layout:fragment="scripts">
+    <script>
+        function markAsCompleted(button) {
+            const appointmentId = button.getAttribute('data-appointment-id');
+            // Aquí iría la lógica para marcar la cita como completada
+            // Por ejemplo, una llamada AJAX al endpoint correspondiente
+        }
+    </script>
+</th:block>
+</body>
+</html>

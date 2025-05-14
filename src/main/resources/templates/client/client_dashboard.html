@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Mi Dashboard - Essence De Toi</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="container py-4">
+        <!-- Bienvenida -->
+        <h2 class="mb-4">Bienvenido/a, <span th:text="${currentUser.fullName}">Usuario</span></h2>
+
+        <!-- Próximas Citas -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="card-title h5 mb-0">Mis Próximas Citas</h3>
+            </div>
+            <div class="card-body">
+                <div th:if="${upcomingAppointments.empty}" class="text-center py-3">
+                    <p>No tienes citas programadas.</p>
+                    <a th:href="@{/appointments/new}" class="btn btn-primary">Agendar Nueva Cita</a>
+                </div>
+                <div th:unless="${upcomingAppointments.empty}" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Servicio</th>
+                                <th>Estilista</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="appointment : ${upcomingAppointments}">
+                                <td th:text="${#temporals.format(appointment.appointmentDateTime, 'dd/MM/yyyy')}">01/01/2024</td>
+                                <td th:text="${#temporals.format(appointment.appointmentDateTime, 'HH:mm')}">10:00</td>
+                                <td th:text="${appointment.service.name}">Corte de Cabello</td>
+                                <td th:text="${appointment.stylist.fullName}">Estilista</td>
+                                <td>
+                                    <a th:href="@{/appointments/view/{id}(id=${appointment.id})}" class="btn btn-sm btn-info">Ver Detalles</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Acciones Rápidas -->
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Nueva Cita</h5>
+                        <p class="card-text">Agenda una nueva cita con nuestros profesionales.</p>
+                        <a th:href="@{/appointments/new}" class="btn btn-primary">Agendar Cita</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Mis Citas</h5>
+                        <p class="card-text">Ver el historial completo de tus citas.</p>
+                        <a th:href="@{/appointments/my}" class="btn btn-outline-primary">Ver Historial</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Servicios</h5>
+                        <p class="card-text">Explora nuestros servicios disponibles.</p>
+                        <a th:href="@{/services/list}" class="btn btn-outline-primary">Ver Servicios</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

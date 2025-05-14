@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Dashboard de Administración - Essence De Toi</title>
+    <style>
+        .dashboard-card {
+            margin-bottom: 20px;
+        }
+        .dashboard-card .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 150px; /* Altura mínima para uniformidad */
+        }
+         .dashboard-card .card-title {
+            font-size: 1.25rem;
+        }
+        .dashboard-card .card-text {
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content" class="container mt-4">
+    <h2 class="mb-4">Panel de Administración</h2>
+
+    <div class="row">
+        <!-- Tarjeta de Gestión de Usuarios -->
+        <div class="col-md-4 dashboard-card">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-users me-2"></i>Gestión de Usuarios</h5>
+                    <p class="card-text">Ver, editar y gestionar roles de todos los usuarios registrados en el sistema.</p>
+                    <a th:href="@{/admin/users}" class="btn btn-primary mt-auto">Ir a Usuarios</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Gestión de Servicios -->
+        <div class="col-md-4 dashboard-card">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-cut me-2"></i>Gestión de Servicios</h5>
+                    <p class="card-text">Añadir nuevos servicios, editar existentes, y ajustar precios o descripciones.</p>
+                    <a th:href="@{/services/list}" class="btn btn-primary mt-auto">Ir a Servicios</a>
+                    <!-- <a th:href="@{/services/new}" class="btn btn-success mt-2">Nuevo Servicio</a> -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Gestión de Citas -->
+        <div class="col-md-4 dashboard-card">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-calendar-alt me-2"></i>Gestión de Citas</h5>
+                    <p class="card-text">Ver todas las citas, filtrar, y realizar modificaciones si es necesario.</p>
+                    <a th:href="@{/appointments/all}" class="btn btn-primary mt-auto">Ir a Citas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Próximamente: Estadísticas -->
+    <!-- 
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    Estadísticas Rápidas (Próximamente)
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Aquí se podrían mostrar gráficos o resúmenes como:</p>
+                    <ul>
+                        <li>Número de citas hoy/esta semana</li>
+                        <li>Servicios más populares</li>
+                        <li>Nuevos usuarios registrados recientemente</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    -->
+
+    <!-- Asegúrate de tener Font Awesome si usas los iconos <i class="fas ..."> -->
+    <!-- Puedes añadirlo en layout.html o aquí si solo es para admin -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->
+
+</div>
+
+</body>
+</html>

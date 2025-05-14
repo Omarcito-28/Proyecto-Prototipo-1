@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+<head>
+    <title>Editar Roles de Usuario - Essence De Toi</title>
+    <style>
+        .edit-user-form-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 25px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="contentFragment" class="container">
+    <div class="edit-user-form-container">
+        <h2 class="text-center mb-4">Editar Roles para <span th:text="${user.username}"></span></h2>
+
+        <div th:if="${errorMessage}" class="alert alert-danger">
+            <span th:text="${errorMessage}"></span>
+        </div>
+        <div th:if="${successMessage}" class="alert alert-success">
+            <span th:text="${successMessage}"></span>
+        </div>
+
+        <form th:action="@{/admin/users/update-roles/{id}(id=${user.id})}" th:object="${userRoleUpdateDto}" method="post">
+            <!-- Información del usuario (solo lectura) -->
+            <div class="mb-3">
+                <label class="form-label">Nombre de Usuario:</label>
+                <input type="text" class="form-control" th:value="${user.username}" disabled readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nombre Completo:</label>
+                <input type="text" class="form-control" th:value="${user.fullName}" disabled readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email:</label>
+                <input type="email" class="form-control" th:value="${user.email}" disabled readonly>
+            </div>
+
+            <hr>
+
+            <div class="mb-3">
+                <label class="form-label">Roles Asignados:</label>
+                <div th:if="${#lists.isEmpty(allRoles)}">
+                     <p class="text-muted">No hay roles definidos en el sistema.</p>
+                </div>
+                <div th:each="role : ${allRoles}" class="form-check">
+                    <input class="form-check-input" type="checkbox" name="roleIds" th:value="${role.id}" 
+                           th:id="'role-' + ${role.id}" th:checked="${#lists.contains(assignedRoleIds, role.id)}">
+                    <label class="form-check-label" th:for="'role-' + ${role.id}" th:text="${role.name}"></label>
+                </div>
+                <div th:if="${#fields.hasErrors('roleIds')}" th:errors="*{roleIds}" class="text-danger mt-1"></div>
+            </div>
+
+            <div class="mb-3 form-check">
+                 <input type="checkbox" class="form-check-input" id="enabled" name="enabled" th:checked="${user.enabled}">
+                 <label class="form-check-label" for="enabled">Usuario Habilitado</label>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <a th:href="@{/admin/users}" class="btn btn-secondary me-md-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Actualizar Roles y Estado</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
