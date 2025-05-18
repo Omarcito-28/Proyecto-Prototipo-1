@@ -1,6 +1,7 @@
 package com.essencedetoi.controller;
 
 import com.essencedetoi.model.User;
+import com.essencedetoi.model.Appointment;
 import com.essencedetoi.service.AppointmentService;
 import com.essencedetoi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -42,7 +44,8 @@ public class DashboardController {
                 return "admin/admin_dashboard";
             } else if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_STYLIST"))) {
                 // Cargar datos específicos para estilistas
-                model.addAttribute("todayAppointments", appointmentService.getTodayAppointmentsForStylist(user.getId()));
+                List<Appointment> appointments = appointmentService.getAppointmentsForStylist(user.getId());
+                model.addAttribute("appointments", appointments);
                 return "stylist/stylist_dashboard";
             } else {
                 // Por defecto, mostrar dashboard de cliente

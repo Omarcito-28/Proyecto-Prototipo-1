@@ -18,7 +18,7 @@
 </head>
 <body>
 
-<div layout:fragment="contentFragment" class="container mt-4">
+<div layout:fragment="content" class="container mt-4">
     <div class="card details-card">
         <div class="card-header bg-dark text-white">
             Detalles de la Cita #<span th:text="${appointment.id}"></span>
@@ -63,12 +63,12 @@
                 <ul class="list-group list-group-flush mb-4">
                     <li class="list-group-item">
                         <strong>Cliente:</strong> <span th:text="${appointment.client.fullName}"></span>
-                        (<a th:href="'mailto:' + ${appointment.client.email}" th:text="${appointment.client.email}"></a>)
+                         (<a th:href="'mailto:' + ${appointment.client.email}" th:text="${appointment.client.email}" style="color: var(--primary-color); text-decoration: none;"></a>)
                         <span th:if="${appointment.client.phoneNumber}">, Tel: <span th:text="${appointment.client.phoneNumber}"></span></span>
                     </li>
                     <li class="list-group-item">
                         <strong>Estilista:</strong> <span th:text="${appointment.stylist.fullName}"></span>
-                         (<a th:href="'mailto:' + ${appointment.stylist.email}" th:text="${appointment.stylist.email}"></a>)
+                          (<a th:href="'mailto:' + ${appointment.stylist.email}" th:text="${appointment.stylist.email}" style="color: var(--primary-color); text-decoration: none;"></a>)
                     </li>
                 </ul>
 
@@ -85,32 +85,12 @@
                     
                     <!-- Botón para marcar como completada (solo visible para estilistas y admin cuando está programada) -->
                     <div sec:authorize="hasAnyRole('STYLIST', 'ADMIN')" th:if="${appointment.status.name() == 'SCHEDULED'}" class="mb-3">
-                        <form th:action="@{/appointments/complete/{id}(id=${appointment.id})}" method="post" style="display: inline;">
-                            <button type="button" class="btn btn-success" data-bs-toggle="modal" th:attr="data-bs-target='#completeAppointmentModal-'+${appointment.id}">
-                                <i class="bi bi-check-circle"></i> Marcar como Completada
-                            </button>
-                        </form>
-
-                        <!-- Modal de Confirmación para Completar -->
-                        <div class="modal fade" th:id="'completeAppointmentModal-'+${appointment.id}" tabindex="-1" aria-labelledby="completeAppointmentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Confirmar Finalización</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        ¿Está seguro que desea marcar esta cita como completada?
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                        <form th:action="@{/appointments/complete/{id}(id=${appointment.id})}" method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-success">Confirmar</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                         <form th:action="@{/appointments/complete/{id}(id=${appointment.id})}" method="post" style="display: inline;">
+                             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                             <button type="submit" class="btn btn-success">
+                                 <i class="bi bi-check-circle"></i> Marcar como Completada
+                             </button>
+                         </form>
                     </div>
 
                     <!-- Botón para cancelar (solo visible para clientes cuando está programada) -->

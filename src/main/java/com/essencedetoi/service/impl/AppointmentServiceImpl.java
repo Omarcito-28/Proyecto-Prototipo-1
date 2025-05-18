@@ -93,7 +93,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional(readOnly = true)
     public List<Appointment> getAppointmentsForStylist(Long stylistId) {
-        return appointmentRepository.findByStylistId(stylistId);
+        return appointmentRepository.findByStylistId(stylistId)
+                .stream()
+                .filter(appointment -> appointment.getStatus() == AppointmentStatus.SCHEDULED)
+                .toList();
     }
 
     @Override

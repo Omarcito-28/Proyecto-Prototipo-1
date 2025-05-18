@@ -91,18 +91,19 @@
     <div class="row" th:if="${!services.isEmpty()}">
         <div class="col-md-4 mb-4" th:each="service : ${services}">
             <div class="card h-100">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title" th:text="${service.name}">Nombre del Servicio</h5>
-                    <p class="card-text flex-grow-1" th:text="${service.description}">Descripción del servicio.</p>
-                    <ul class="list-unstyled mt-3 mb-4">
-                        <li><strong>Duración:</strong> <span th:text="${service.durationMinutes}"></span> minutos</li>
-                        <li class="d-flex align-items-center">
+                <div class="card-body d-flex flex-column text-center">
+                    <h5 class="card-title mb-4" th:text="${service.name}">Nombre del Servicio</h5>
+                    <img th:src="|/images/services/${service.name == 'Corte de Cabello Damas' ? 'corte_dama' : service.name == 'Manicura Clásica' ? 'manicura_clasica' : service.name == 'Peinado y Maquillaje para Eventos' ? 'peinado_evento' : service.name == 'Tinturación del Cabello' ? 'tintura' : 'tratamiento_capilar'}.${service.name == 'Tinturación del Cabello' || service.name == 'Tratamiento Capilar Hidratante' ? 'webp' : 'jpg'}|" class="rounded mx-auto d-block mb-4" alt="Imagen del servicio" onerror="this.src='/images/services/default.jpg'" th:style="|${service.name == 'Peinado y Maquillaje para Eventos' ? 'max-width: 100%; height: auto; max-height: 250px; object-fit: cover;' : 'max-width: 100%; height: auto; max-height: 200px; object-fit: cover;'}|">
+                    <p class="card-text mb-4" th:text="${service.description}">Descripción del servicio.</p>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><strong>Duración:</strong> <span th:text="${service.durationMinutes}"></span> minutos</li>
+                        <li class="d-flex align-items-center justify-content-center mb-2">
                             <strong class="me-2">Precio:</strong>
                             <span sec:authorize="!hasRole('ADMIN')" class="price-display">
                                 COP $<span th:text="${#numbers.formatDecimal(service.price, 1, 'POINT', 2, 'COMMA')}" th:data-service-id="${service.id}"></span>
                             </span>
                             <div sec:authorize="hasRole('ADMIN')" class="d-flex align-items-center">
-                                <div class="input-group" style="width: auto;">
+                                <div class="input-group justify-content-center" style="width: 100%; max-width: 300px;">
                                     <span class="input-group-text">COP $</span>
                                     <input type="number" step="0.01" min="0"
                                            th:value="${service.price}"
@@ -110,7 +111,7 @@
                                            th:id="'price-input-' + ${service.id}"
                                            class="form-control form-control-sm price-input"
                                            style="width: 100px;"/>
-                                    <button class="btn btn-sm btn-primary update-price-btn"
+                                    <button class="btn btn-primary update-price-btn w-100"
                                             type="button"
                                             th:data-service-id="${service.id}"
                                             th:onclick="'updatePrice(' + ${service.id} + ')'">Actualizar</button>

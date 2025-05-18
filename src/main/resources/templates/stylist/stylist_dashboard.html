@@ -13,13 +13,13 @@
         <!-- Citas del Día -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title h5 mb-0">Citas de Hoy</h3>
+                <h3 class="card-title h5 mb-0">Todas las Citas</h3>
             </div>
             <div class="card-body">
-                <div th:if="${todayAppointments.empty}" class="text-center py-3">
-                    <p>No tienes citas programadas para hoy.</p>
+                <div th:if="${appointments.empty}" class="text-center py-3">
+                    <p>No tienes citas programadas.</p>
                 </div>
-                <div th:unless="${todayAppointments.empty}" class="table-responsive">
+                <div th:unless="${appointments.empty}" class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="appointment : ${todayAppointments}">
+                            <tr th:each="appointment : ${appointments}">
                                 <td th:text="${#temporals.format(appointment.appointmentDateTime, 'HH:mm')}">10:00</td>
                                 <td th:text="${appointment.client.fullName}">Cliente</td>
                                 <td th:text="${appointment.service.name}">Servicio</td>
@@ -43,7 +43,7 @@
                                 </td>
                                 <td>
                                     <div class="btn-group">
-                                        <a th:href="@{/appointments/view/{id}(id=${appointment.id})}" 
+                                        <a th:href="@{/appointments/{id}(id=${appointment.id})}" 
                                            class="btn btn-sm btn-info">Ver Detalles</a>
                                         <button th:if="${appointment.status == 'PENDING'}"
                                                 class="btn btn-sm btn-success"
@@ -69,7 +69,7 @@
                         <div class="list-group list-group-flush">
                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 Citas Pendientes
-                                <span class="badge bg-primary rounded-pill" th:text="${todayAppointments.size()}">0</span>
+                                <span class="badge bg-primary rounded-pill" th:text="${appointments.size()}">0</span>
                             </a>
                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                                 Citas Completadas
@@ -85,7 +85,6 @@
                         <h5 class="card-title">Acciones Rápidas</h5>
                         <div class="d-grid gap-2">
                             <a th:href="@{/appointments/my}" class="btn btn-outline-primary">Ver Todas mis Citas</a>
-                            <a th:href="@{/profile}" class="btn btn-outline-secondary">Actualizar Perfil</a>
                         </div>
                     </div>
                 </div>

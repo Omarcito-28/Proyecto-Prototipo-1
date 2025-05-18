@@ -193,26 +193,26 @@ public class AppointmentController {
         return "redirect:/appointments/my"; // O al dashboard del estilista
     }
 
-    // GET para ver detalles de una cita (podría ser útil)
+    // GET para ver detalles de una cita
     @GetMapping("/{id}")
     public String viewAppointmentDetails(@PathVariable("id") Long appointmentId, Model model, RedirectAttributes redirectAttributes) {
         Optional<Appointment> appointmentOptional = appointmentService.getAppointmentById(appointmentId);
         User currentUser = getCurrentUser();
-
+        
         if (appointmentOptional.isEmpty()) {
             redirectAttributes.addFlashAttribute("errorMessage", "Cita no encontrada.");
             return "redirect:/appointments/my";
         }
+        
         Appointment appointment = appointmentOptional.get();
         
-        // Verificar permisos para ver detalles
         boolean isAdmin = currentUser.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
         boolean isClientOwner = appointment.getClient().getId().equals(currentUser.getId());
         boolean isStylistAssigned = appointment.getStylist().getId().equals(currentUser.getId());
 
         if (!isAdmin && !isClientOwner && !isStylistAssigned) {
             redirectAttributes.addFlashAttribute("errorMessage", "No tiene permisos para ver esta cita.");
-            return "redirect:/appointments/my"; 
+            return "redirect:/appointments/my";
         }
 
         model.addAttribute("appointment", appointment);

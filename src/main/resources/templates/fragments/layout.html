@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="_csrf" th:if="${_csrf}" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:if="${_csrf}" th:content="${_csrf.headerName}"/>
-    <title th:text="${pageTitle != null ? pageTitle : 'Essence De Toi'}">Essence De Toi</title>
+    <title>Essence De Toi</title>
 
     <!-- Bootstrap CSS -->
     <link th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}" rel="stylesheet">
@@ -68,7 +69,7 @@
                         <a class="nav-link" th:href="@{/appointments/new}">Agendar Cita</a>
                     </li>
                     <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="btn btn-outline-primary" th:href="@{/login}">Iniciar Sesión</a>
+                            <a class="btn btn-outline-primary" th:href="@{/login}">Iniciar Sesión</a>
                     </li>
                     <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -85,6 +86,7 @@
                         </ul>
                     </li>
                 </ul>
+
             </div>
         </div>
     </nav>
@@ -101,13 +103,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
 
-        <!-- Content Fragment -->
-        <div layout:fragment="contentFragment"></div>
-        <div th:if="${warningMessage}" class="alert alert-warning alert-dismissible fade show" role="alert">
-            <span th:text="${warningMessage}"></span>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
         <!-- Page Specific Content -->
         <div layout:fragment="content"></div>
 
@@ -116,13 +111,15 @@
     <!-- Footer -->
     <footer class="footer" th:fragment="footer">
         <div class="container text-center">
-            <span class="text-muted">© Essence De Toi <span th:text="${#dates.year(#dates.createNow())}"></span></span>
+            <span style="color: white;">© Essence De Toi <span th:text="${#dates.year(#dates.createNow())}"></span></span>
         </div>
     </footer>
 
+    <!-- jQuery (debe ir primero) -->
+    <script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
     <!-- Bootstrap JS Bundle (includes Popper) -->
     <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
-    <!-- Custom JS (opcional) -->
-    <!-- <script th:src="@{/js/main.js}"></script> -->
+    <!-- Custom JS -->
+    <script th:src="@{/js/main.js}" defer></script>
 </body>
 </html>

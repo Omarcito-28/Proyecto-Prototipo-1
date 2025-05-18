@@ -7,10 +7,10 @@
 <body>
 
 <div layout:fragment="content" class="container mt-4">
-    <div class="p-5 mb-4 bg-light rounded-3">
-        <div class="container-fluid py-5">
-            <h1 class="display-5 fw-bold">Bienvenido a Essence De Toi</h1>
-            <p class="col-md-8 fs-4">Tu oasis de belleza y bienestar. Descubre nuestros servicios exclusivos y agenda tu cita hoy mismo.</p>
+    <div class="p-5 mb-5 rounded-3 essence-background" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3); padding: 4rem !important;">
+        <div class="container-fluid py-5 text-center essence-content" style="max-width: 800px; margin: 0 auto;">
+            <h1 class="display-5 fw-bold" style="margin-bottom: 2rem;">Bienvenido a Essence De Toi</h1>
+            <p class="fs-4" style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; margin-bottom: 2rem;">Tu oasis de belleza y bienestar. Descubre nuestros servicios exclusivos y agenda tu cita hoy mismo.</p>
             <div sec:authorize="!isAuthenticated()">
                 <a class="btn btn-primary btn-lg" th:href="@{/appointments/new}" role="button">Agendar Cita Ahora</a>
                 <a class="btn btn-secondary btn-lg" th:href="@{/login}" role="button">Iniciar Sesión</a>
@@ -23,25 +23,167 @@
 
     <!-- Sección de Servicios Destacados -->
     <div class="container mt-5 mb-5">
-        <h2 class="text-center mb-4">Nuestros Servicios Populares</h2>
+        <h2 class="text-center mb-4" style="background-color: #1a1a1a; padding: 1rem; border-radius: 5px; color: #996515; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Nuestros Servicios Populares</h2>
         <div th:if="${services == null || services.isEmpty()}" class="alert alert-info" role="alert">
             Actualmente no hay servicios para mostrar. ¡Vuelve pronto!
         </div>
-        <div class="row" th:if="${services != null && !services.isEmpty()}">
-            <div class="col-md-4 mb-4" th:each="service : ${services}"> <!-- Mostrar solo los primeros 3 o menos si hay menos -->
-                <div class="card h-100 shadow-sm">
-                    <!-- Podrías añadir una imagen del servicio aquí si la tuvieras -->
-                    <!-- <img th:src="@{/images/service-placeholder.png}" class="card-img-top" alt="Imagen del Servicio"> -->
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title" th:text="${service.name}">Nombre del Servicio</h5>
-                        <p class="card-text flex-grow-1" th:text="${service.description != null && service.description.length() > 100 ? service.description.substring(0, 100) + '...' : service.description}">Descripción corta.</p>
-                        <ul class="list-unstyled mt-3 mb-2">
-                            <li><strong>Duración:</strong> <span th:text="${service.durationMinutes}"></span> minutos</li>
-                            <li><strong>Precio:</strong> $<span th:text="${#numbers.formatDecimal(service.price, 1, 'POINT', 2, 'COMMA')}"></span></li>
-                        </ul>
-                        <a th:href="@{/services/list}" class="btn btn-sm btn-outline-primary mt-auto align-self-start">Ver Detalles</a>
+        <div th:if="${services != null && !services.isEmpty()}">
+            <!-- Carrusel de Servicios -->
+            <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
+                <!-- Indicadores -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <!-- Contenido del Carrusel -->
+                <div class="carousel-inner">
+                    <!-- Estilo personalizado para el carrusel -->
+                    <style>
+                        .carousel-item {
+                            height: 400px;
+                            position: relative;
+                        }
+                        
+                        .carousel-item .content-wrapper {
+                            position: absolute;
+                            top: 50%;
+                            left: 50%;
+                            transform: translate(-50%, -50%);
+                            width: 70%;
+                            text-align: center;
+                            z-index: 3;
+                            padding: 2rem;
+                            border-radius: 10px;
+                            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                            height: 300px;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            background-size: cover;
+                            background-position: center;
+                            background-repeat: no-repeat;
+                            color: white;
+                            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+                            position: relative;
+                        }
+                        
+                        .carousel-item .content-wrapper::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            background: rgba(0, 0, 0, 0.5);
+                            z-index: -1;
+                        }
+                        
+                        .carousel-item .content-wrapper h5 {
+                            font-size: 2rem;
+                            margin-bottom: 1.5rem;
+                            color: #333;
+                            font-weight: bold;
+                        }
+                        
+                        .carousel-item .content-wrapper p {
+                            font-size: 1.3rem;
+                            line-height: 1.8;
+                            color: #666;
+                            font-weight: 500;
+                            margin-bottom: 2rem;
+                        }
+                        
+                        .carousel-item .content-wrapper a {
+                            font-size: 1.1rem;
+                            padding: 1rem 2rem;
+                            margin-top: 1rem;
+                            text-transform: uppercase;
+                            letter-spacing: 1px;
+                            background: #333;
+                            color: white;
+                            border-radius: 5px;
+                            transition: all 0.3s ease;
+                        }
+                        
+                        .carousel-item .content-wrapper a:hover {
+                            background: #555;
+                            transform: translateY(-2px);
+                        }
+                    </style>
+                    <!-- Primer Slide -->
+                    <div class="carousel-item active">
+                        <div class="content-wrapper" style="background-image: url('/images/services/manicura_clasica.jpg');">
+                            <h5 class="mb-2" th:text="${services[0].name}" style="font-size: 1.8rem; color: rgba(245, 245, 245, 0.753);">Nombre del Servicio</h5>
+                            <p class="mb-0" th:text="${services[0].description}" style="font-size: 1.3rem; color: white; line-height: 1.8;">Descripción completa.</p>
+                        </div>
+                    </div>
+                    <!-- Segundo Slide -->
+                    <div class="carousel-item">
+                        <div class="content-wrapper" style="background-image: url('/images/services/tintura.webp');">
+                            <h5 class="mb-2" th:text="${services[1].name}" style="font-size: 1.8rem; color: rgba(245, 245, 245, 0.753);">Nombre del Servicio</h5>
+                            <p class="mb-0" th:text="${services[1].description}" style="font-size: 1.3rem; color: white; line-height: 1.8;">Descripción completa.</p>
+                        </div>
+                    </div>
+                    <!-- Tercer Slide -->
+                    <div class="carousel-item">
+                        <div class="content-wrapper" style="background-image: url('/images/services/tratamiento_capilar.webp');">
+                            <a th:href="@{/services/list}" class="btn btn-light btn-lg">Ver Todos los Servicios</a>
+                        </div>
                     </div>
                 </div>
+                <!-- Estilo personalizado para las flechas del carrusel -->
+                <style>
+                    .carousel-control-prev,
+                    .carousel-control-next {
+                        width: 60px;
+                        height: 60px;
+                        background: #000;
+                        border-radius: 100px;
+                        border: 2px solid rgba(255, 255, 255, 0.1);
+                        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+                        transition: all 0.3s ease;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        cursor: pointer;
+                        z-index: 2;
+                    }
+                    
+                    .carousel-control-prev:hover,
+                    .carousel-control-next:hover {
+                        background: rgba(0, 0, 0, 0.9);
+                        border-color: rgba(255, 255, 255, 0.2);
+                        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+                    }
+                    
+                    .carousel-control-prev-icon,
+                    .carousel-control-next-icon {
+                        width: 40px;
+                        height: 40px;
+                        background: none;
+                        opacity: 0.8;
+                        transition: opacity 0.3s ease;
+                    }
+                    
+                    .carousel-control-prev-icon {
+                        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgb(255,255,255)'%3E%3Cpath d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12l4.58-4.59z'/%3E%3C/svg%3E");
+                    }
+                    
+                    .carousel-control-next-icon {
+                        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgb(255,255,255)'%3E%3Cpath d='M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z'/%3E%3C/svg%3E");
+                    }
+                </style>
+                
+                <!-- Controles -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#servicesCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#servicesCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Siguiente</span>
+                </button>
             </div>
         </div>
     </div>
@@ -49,14 +191,14 @@
 
     <div class="row align-items-md-stretch">
         <div class="col-md-6 mb-4">
-            <div class="h-100 p-5 text-white bg-dark rounded-3">
+            <div class="h-100 p-5 text-white bg-dark rounded-3" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
                 <h2>Nuestros Servicios</h2>
                 <p>Explora nuestra gama de tratamientos de belleza, desde cortes de cabello y coloración hasta tratamientos faciales y masajes relajantes. Usamos productos de alta calidad para asegurar los mejores resultados.</p>
                 <a class="btn btn-outline-light" th:href="@{/services/list}" role="button">Ver Servicios</a>
             </div>
         </div>
         <div class="col-md-6 mb-4">
-            <div class="h-100 p-5 bg-light border rounded-3">
+            <div class="h-100 p-5 bg-light border rounded-3" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
                 <h2>Agenda tu Cita</h2>
                 <p>¿Lista para tu transformación? Agendar tu cita es fácil y rápido. Selecciona tu servicio, estilista preferido y el horario que más te convenga.</p>
                 <a class="btn btn-outline-secondary" th:href="@{/appointments/new}" sec:authorize="isAuthenticated()" role="button">Agendar Ahora</a>
@@ -65,29 +207,39 @@
         </div>
     </div>
 
-    <!-- Nueva Sección Contáctanos -->
-    <section id="contact-section" class="contact-section py-5 mt-5 border-top">
-        <div class="container">
-            <h2 class="text-center mb-4">Contáctanos</h2>
-            <div class="row">
-                <div class="col-md-8 offset-md-2">
-                    <p class="text-center">Ponte en contacto con nosotros para cualquier consulta o para agendar tu próxima visita. ¡Estamos aquí para ayudarte!</p>
-                    <div class="card mt-4">
-                        <div class="card-body">
-                            <p><i class="bi bi-telephone-fill"></i> <strong>Teléfono:</strong> <a href="tel:+1234567890">tel:+1234567890</a></p>
-                            <p><i class="bi bi-envelope-fill"></i> <strong>Email:</strong> <a href="mailto:contacto@essencedetoi.com">mailto:contacto@essencedetoi.com</a></p>
-                            <p><i class="bi bi-geo-alt-fill"></i> <strong>Dirección:</strong> Calle 123, Neiva, Colombia</p>
-                            <p><i class="bi bi-clock-fill"></i> <strong>Horario:</strong> Lunes a Sábado: 9:00 AM - 7:00 PM</p>
+    <!-- Sección de Contacto -->
+    <div id="contact-section" class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="p-5 bg-light rounded-3" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
+                    <h2 class="text-center mb-4">Contáctanos</h2>
+                    <div class="text-center">
+                        <p class="mb-4">Ponte en contacto con nosotros para cualquier consulta o para agendar tu próxima visita. ¡Estamos aquí para ayudarte!</p>
+                        <div class="contact-info">
+                            <div class="mb-3">
+                                <i class="fas fa-phone me-2"></i>
+                                <a href="tel:+1234567890" class="text-dark">Teléfono: +1234567890</a>
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-envelope me-2"></i>
+                                <a href="mailto:contacto@essencedetoi.com" class="text-dark">Email: contacto@essencedetoi.com</a>
+                            </div>
+                            <div class="mb-3">
+                                <i class="fas fa-map-marker-alt me-2"></i>
+                                <span>Dirección: Calle 123, Neiva, Colombia</span>
+                            </div>
+                            <div>
+                                <i class="fas fa-clock me-2"></i>
+                                <span>Horario: Lunes a Sábado: 9:00 AM - 7:00 PM</span>
+                            </div>
                         </div>
                     </div>
-                    <!-- Podrías añadir un mapa de Google Maps aquí si lo deseas -->
-                    <!-- Ejemplo: <div class="mt-4"><iframe src="URL_DE_TU_MAPA_EMBEBIDO" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe></div> -->
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
-</div>
+    </div>
 
 </body>
 </html>

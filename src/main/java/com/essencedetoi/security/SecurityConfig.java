@@ -9,16 +9,19 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true) // Habilitar seguridad a nivel de método
+@EnableMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class SecurityConfig {
+
+    private static final Logger logger = LoggerFactory.getLogger(SecurityConfig.class);
 
     private final UserService userService;
 
@@ -41,34 +44,37 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        logger.info("Configurando SecurityFilterChain...");
+        
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // Habilitar CSRF excepto para endpoints API\
+                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // Habilitar CSRF excepto para endpoints API
                 .authorizeHttpRequests(authorize -> authorize
                         // Rutas públicas
                         .requestMatchers("/", "/home", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
                         .requestMatchers("/register", "/register/save").permitAll()
                         .requestMatchers("/login", "/login-error").permitAll()
                         .requestMatchers("/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**").permitAll() // Permitir acceso a Swagger y su config
+                        .requestMatchers("/**?lang=**").permitAll() // Permitir cambio de idioma
 
-                        // Rutas de Administrador (más restrictivas, procesadas antes que las generales para /appointments/**)
+                        // Rutas de Administrador
                         .requestMatchers("/admin/**", "/users/**", "/services/new", "/services/edit/**", "/services/delete/**", "/appointments/all").hasRole("ADMIN")
                         
                         // Rutas que requieren autenticación general
                         .requestMatchers("/dashboard").authenticated()
-                        .requestMatchers("/appointments/**").authenticated() // Para citas no admin (e.g., /my-appointments, /details/*, /schedule)
+                        .requestMatchers("/appointments/**").authenticated()
                         .requestMatchers("/stylist/**").authenticated()
-                        .requestMatchers("/profile/**").authenticated() // Proteger rutas de perfil
+                        .requestMatchers("/profile/**").authenticated()
 
                         // Rutas con roles específicos para ver lista de servicios
                         .requestMatchers("/services/", "/services/list").hasAnyRole("ADMIN", "STYLIST", "CLIENT")
                         
-                        .anyRequest().authenticated() // Todas las demás no listadas explícitamente requieren autenticación
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .loginProcessingUrl("/login") // URL a la que se envía el formulario de login
-                        .defaultSuccessUrl("/", true) // Redirigir después del login exitoso
-                        .failureUrl("/login-error") // Página de error de login
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login-error")
                         .permitAll()
                 )
                 .logout(logout -> logout
