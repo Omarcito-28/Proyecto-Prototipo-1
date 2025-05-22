@@ -69,7 +69,7 @@
                                     </div>
                                     <div class="modal-body">
                                         ¿Estás seguro de que deseas cancelar la cita para el servicio "<span th:text="${apt.service.name}"></span>" 
-                                        programada para el <span th:text="${#temporals.format(apt.appointmentDateTime, 'dd/MM/yyyy ''at'' HH:mm')}"></span>?
+                                        programada para el <span th:text="${#temporals.format(apt.appointmentDateTime, 'dd/MM/yyyy') + ' a las ' + #temporals.format(apt.appointmentDateTime, 'HH:mm')}"></span>?
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>

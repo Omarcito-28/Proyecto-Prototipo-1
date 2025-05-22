@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html xmlns:th="http://www.thymeleaf.org" 
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout}">
 <head>
     <title>Bienvenido a Essence De Toi</title>
@@ -10,10 +11,12 @@
     <div class="p-5 mb-5 rounded-3 essence-background" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3); padding: 4rem !important;">
         <div class="container-fluid py-5 text-center essence-content" style="max-width: 800px; margin: 0 auto;">
             <h1 class="display-5 fw-bold" style="margin-bottom: 2rem;">Bienvenido a Essence De Toi</h1>
-            <p class="fs-4" style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; margin-bottom: 2rem;">Tu oasis de belleza y bienestar. Descubre nuestros servicios exclusivos y agenda tu cita hoy mismo.</p>
+            <p class="fs-4" style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; margin-bottom: 2rem;">
+                Tu oasis de belleza y bienestar. Descubre nuestros servicios exclusivos y agenda tu cita hoy mismo.
+            </p>
             <div sec:authorize="!isAuthenticated()">
                 <a class="btn btn-primary btn-lg" th:href="@{/appointments/new}" role="button">Agendar Cita Ahora</a>
-                <a class="btn btn-secondary btn-lg" th:href="@{/login}" role="button">Iniciar Sesión</a>
+                <a class="btn btn-secondary btn-lg ms-2" th:href="@{/login}" role="button">Iniciar Sesión</a>
             </div>
             <div sec:authorize="isAuthenticated()">
                 <a class="btn btn-info btn-lg" th:href="@{/dashboard}" role="button">Ir al Dashboard</a>
@@ -23,7 +26,9 @@
 
     <!-- Sección de Servicios Destacados -->
     <div class="container mt-5 mb-5">
-        <h2 class="text-center mb-4" style="background-color: #1a1a1a; padding: 1rem; border-radius: 5px; color: #996515; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">Nuestros Servicios Populares</h2>
+        <h2 class="text-center mb-4" style="background-color: #1a1a1a; padding: 1rem; border-radius: 5px; color: #996515; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+            Nuestros Servicios Populares
+        </h2>
         <div th:if="${services == null || services.isEmpty()}" class="alert alert-info" role="alert">
             Actualmente no hay servicios para mostrar. ¡Vuelve pronto!
         </div>

@@ -55,6 +55,8 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/login-error").permitAll()
                         .requestMatchers("/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**").permitAll() // Permitir acceso a Swagger y su config
                         .requestMatchers("/**?lang=**").permitAll() // Permitir cambio de idioma
+                        .requestMatchers("/test-i18n").permitAll() // Ruta de prueba de internacionalización
+                        .requestMatchers("/changeLanguage").permitAll() // Permitir cambio de idioma
 
                         // Rutas de Administrador
                         .requestMatchers("/admin/**", "/users/**", "/services/new", "/services/edit/**", "/services/delete/**", "/appointments/all").hasRole("ADMIN")

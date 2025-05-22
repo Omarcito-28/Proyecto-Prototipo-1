@@ -112,19 +112,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Manejo de errores global
 window.onerror = function(message, source, lineno, colno, error) {
+    // Ignorar errores específicos que no requieren notificación al usuario
+    const ignoredErrors = [
+        'ResizeObserver loop',
+        'InvalidStateError',
+        'NotSupportedError',
+        'TypeError: Failed to set the \'value\' property on \'HTMLInputElement\': This input element does not support setting the value to ''.'
+    ];
+
+    const errorMessage = String(message);
+    
+    // Verificar si el error debe ser ignorado
+    const shouldIgnore = ignoredErrors.some(ignoredError => errorMessage.includes(ignoredError));
+    
+    if (shouldIgnore) {
+        console.warn('Error ignorado:', {message, source, lineno, colno, error});
+        return true;
+    }
+    
     console.error('Error global:', {message, source, lineno, colno, error});
     
-    // Mostrar notificación de error al usuario
-    if (typeof bootstrap !== 'undefined') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed bottom-0 end-0 m-3';
-        alertDiv.style.zIndex = '9999';
-        alertDiv.role = 'alert';
-        alertDiv.innerHTML = `
-            <strong>Error:</strong> Ha ocurrido un error inesperado. Por favor, recarga la página.
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        `;
-        document.body.appendChild(alertDiv);
+    // Mostrar notificación de error al usuario solo si no es un error de validación de fecha
+    if (typeof bootstrap !== 'undefined' && !errorMessage.includes('appointmentDateTime')) {
+        try {
+            const existingAlerts = document.querySelectorAll('.alert.alert-danger');
+            if (existingAlerts.length === 0) { // Evitar múltiples alertas
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show position-fixed bottom-0 end-0 m-3';
+                alertDiv.style.zIndex = '9999';
+                alertDiv.role = 'alert';
+                alertDiv.innerHTML = `
+                    <strong>Error:</strong> Ha ocurrido un problema. Por favor, verifica los datos e inténtalo de nuevo.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.body.appendChild(alertDiv);
+                
+                // Auto-ocultar después de 5 segundos
+                setTimeout(() => {
+                    const bsAlert = new bootstrap.Alert(alertDiv);
+                    bsAlert.close();
+                }, 5000);
+            }
+        } catch (e) {
+            console.error('Error al mostrar notificación:', e);
+        }
     }
     
     // Prevenir el manejador de errores por defecto

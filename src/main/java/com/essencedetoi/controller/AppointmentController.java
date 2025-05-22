@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,32 +93,77 @@ public class AppointmentController {
         User currentUser = getCurrentUser();
         appointmentDto.setClientId(currentUser.getId()); // Asignar el cliente actual
 
+        // Verificar si hay errores de validación básicos
+        if (result.hasErrors()) {
+            model.addAttribute("stylists", userService.findAllStylists());
+            model.addAttribute("services", salonServiceService.getAllServices());
+            System.out.println("LOG: Errores de validación en el DTO: " + result.getAllErrors());
+            return "appointment/appointment_form";
+        }
+
+        // Verificar que el servicio existe
         Optional<Service> serviceOpt = salonServiceService.getServiceById(appointmentDto.getServiceId());
         if (serviceOpt.isEmpty()) {
             result.rejectValue("serviceId", "notfound", "Servicio no encontrado.");
+            model.addAttribute("stylists", userService.findAllStylists());
+            model.addAttribute("services", salonServiceService.getAllServices());
             System.out.println("LOG: Error de validación - Servicio no encontrado. ID: " + appointmentDto.getServiceId());
+            return "appointment/appointment_form";
         }
 
-        if (appointmentDto.getAppointmentDateTime() != null && appointmentDto.getAppointmentDateTime().isBefore(LocalDateTime.now())) {
-             result.rejectValue("appointmentDateTime", "past.date", "La fecha de la cita no puede ser en el pasado.");
-             System.out.println("LOG: Error de validación - La fecha de la cita está en el pasado: " + appointmentDto.getAppointmentDateTime());
-        }
+        Service service = serviceOpt.get();
+        LocalDateTime appointmentDateTime = appointmentDto.getAppointmentDateTime();
 
-        if (serviceOpt.isPresent() && appointmentDto.getAppointmentDateTime() != null) {
+        // Validar fecha y hora
+        if (appointmentDateTime != null) {
+            // Validar que la cita sea en el futuro
+            if (appointmentDateTime.isBefore(LocalDateTime.now())) {
+                result.rejectValue("appointmentDateTime", "past.date", 
+                    "La fecha de la cita no puede ser en el pasado.");
+            }
+            
+            // Validar horario comercial (9 AM a 7 PM)
+            LocalTime appointmentTime = appointmentDateTime.toLocalTime();
+            LocalTime openingTime = LocalTime.of(9, 0);  // 9:00 AM
+            LocalTime closingTime = LocalTime.of(19, 0);  // 7:00 PM
+            LocalTime endTime = appointmentTime.plusMinutes(service.getDurationMinutes());
+            
+            // Verificar que la cita empiece después o a la hora de apertura
+            boolean isBeforeOpening = appointmentTime.isBefore(openingTime);
+            // Verificar que la cita termine antes o a la hora de cierre
+            boolean isAfterClosing = endTime.isAfter(closingTime);
+            
+            if (isBeforeOpening || isAfterClosing) {
+                String errorMessage;
+                if (isBeforeOpening) {
+                    errorMessage = String.format("El salón abre a las %s. Por favor, seleccione una hora posterior.", openingTime);
+                } else {
+                    errorMessage = String.format("La cita terminaría a las %s, pero el salón cierra a las %s. Por favor, seleccione una hora más temprana.", 
+                                               endTime, closingTime);
+                }
+                result.rejectValue("appointmentDateTime", "business.hours", errorMessage);
+            }
+            
+            // Validar disponibilidad del estilista
             boolean isAvailable = appointmentService.isStylistAvailable(
                 appointmentDto.getStylistId(), 
-                appointmentDto.getAppointmentDateTime(), 
-                serviceOpt.get().getDurationMinutes(), 
+                appointmentDateTime, 
+                service.getDurationMinutes(), 
                 null // existingAppointmentId es null para nuevas citas
             );
+            
             if (!isAvailable) {
-                result.rejectValue("appointmentDateTime", "stylist.unavailable", "El estilista no está disponible en la fecha y hora seleccionada para este servicio.");
-                System.out.println("LOG: Error de validación - Estilista no disponible. StylistID: " + appointmentDto.getStylistId() + ", DateTime: " + appointmentDto.getAppointmentDateTime());
-            } else {
-                System.out.println("LOG: Verificación de disponibilidad - Estilista SÍ disponible.");
+                result.rejectValue("appointmentDateTime", "stylist.unavailable", 
+                    "El estilista no está disponible en la fecha y hora seleccionada para este servicio.");
             }
-        } else {
-             System.out.println("LOG: No se pudo verificar disponibilidad del estilista porque serviceOpt no está presente ("+serviceOpt.isPresent()+") o appointmentDateTime es null ("+(appointmentDto.getAppointmentDateTime() == null)+").");
+        }
+        
+        // Si hay errores, volver al formulario
+        if (result.hasErrors()) {
+            model.addAttribute("stylists", userService.findAllStylists());
+            model.addAttribute("services", salonServiceService.getAllServices());
+            System.out.println("LOG: Errores de validación: " + result.getAllErrors());
+            return "appointment/appointment_form";
         }
 
         // Log antes de revisar result.hasErrors()
