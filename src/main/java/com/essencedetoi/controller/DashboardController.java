@@ -45,7 +45,9 @@ public class DashboardController {
             } else if (user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_STYLIST"))) {
                 // Cargar datos específicos para estilistas
                 List<Appointment> appointments = appointmentService.getAppointmentsForStylist(user.getId());
+                long completedAppointments = appointmentService.countCompletedAppointmentsForStylist(user.getId());
                 model.addAttribute("appointments", appointments);
+                model.addAttribute("completedAppointmentsCount", completedAppointments);
                 return "stylist/stylist_dashboard";
             } else {
                 // Por defecto, mostrar dashboard de cliente

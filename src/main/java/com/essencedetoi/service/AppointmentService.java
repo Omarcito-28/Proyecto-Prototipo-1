@@ -24,4 +24,5 @@ public interface AppointmentService {
     // Métodos para el dashboard
     List<Appointment> getTodayAppointmentsForStylist(Long stylistId);
     List<Appointment> getUpcomingAppointmentsForClient(Long clientId);
+    long countCompletedAppointmentsForStylist(Long stylistId);
 }

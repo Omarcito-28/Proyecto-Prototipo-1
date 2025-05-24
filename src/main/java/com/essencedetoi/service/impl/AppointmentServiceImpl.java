@@ -98,6 +98,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                 .filter(appointment -> appointment.getStatus() == AppointmentStatus.SCHEDULED)
                 .toList();
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public long countCompletedAppointmentsForStylist(Long stylistId) {
+        return appointmentRepository.findByStylistId(stylistId)
+                .stream()
+                .filter(appointment -> appointment.getStatus() == AppointmentStatus.COMPLETED)
+                .count();
+    }
 
     @Override
     @Transactional(readOnly = true)

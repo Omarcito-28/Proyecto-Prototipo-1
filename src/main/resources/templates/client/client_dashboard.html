@@ -38,7 +38,7 @@
                                 <td th:text="${appointment.service.name}">Corte de Cabello</td>
                                 <td th:text="${appointment.stylist.fullName}">Estilista</td>
                                 <td>
-                                    <a th:href="@{/appointments/view/{id}(id=${appointment.id})}" class="btn btn-sm btn-info">Ver Detalles</a>
+                                    <a th:href="@{/appointments/{id}(id=${appointment.id})}" class="btn btn-sm btn-info">Ver Detalles</a>
                                 </td>
                             </tr>
                         </tbody>
