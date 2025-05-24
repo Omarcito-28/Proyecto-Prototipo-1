@@ -7,10 +7,59 @@
         .register-container {
             max-width: 500px;
             margin: 50px auto;
-            padding: 20px;
-            border: 1px solid #ddd;
+            padding: 30px;
+            background-image: url(/images/marble-background.jpg);
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            color: #333333;
+            position: relative;
+            overflow: hidden;
+        }
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 253, 240, 0.95);
+            z-index: 0;
+        }
+        .register-container > * {
+            position: relative;
+            z-index: 1;
+        }
+        .register-container a {
+            color: #996515;
+            text-decoration: none;
+        }
+        .register-container a:hover {
+            color: #7a5012;
+            text-decoration: underline;
+        }
+        .register-container .form-control {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #333333;
+        }
+        .register-container .form-control:focus {
+            border-color: #996515;
+            box-shadow: 0 0 0 0.25rem rgba(153, 101, 21, 0.25);
+        }
+        .register-container .form-label {
+            color: #333333;
+            font-weight: 500;
+        }
+        .register-container .invalid-feedback {
+            color: #dc3545;
+        }
+        .register-container .alert {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
         }
     </style>
 </head>

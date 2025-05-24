@@ -5,15 +5,15 @@
 :root {
     --primary-color: #996515; /* Marrón dorado (Encabezados) */
     --secondary-color: #FFB6C1; /* Rosa Pálido (Fondo Principal) */
-    --accent-color: #FFD700;   /* Dorado claro (Acentos/Botones) */
+    --accent-color: #996515;   /* Dorado marrón (Acentos/Botones) */
     --text-color: #000000;     /* Negro (Texto Principal) */
     --text-light: #4A4A4A;    /* Gris Oscuro (Texto Secundario) */
     --content-bg-light: #FDF6F8; /* Blanco Opaco para Contenido */
     --navbar-bg: var(--content-bg-light);     /* Blanco Opaco (Navbar) */
     --navbar-text: var(--text-color); /* Negro para texto en Navbar Blanca */
-    --navbar-link-hover: var(--accent-color); /* Dorado Claro para hover en navbar */
+    --navbar-link-hover: var(--primary-color); /* Dorado marrón para hover en navbar */
     --footer-bg: #000000;   /* Negro (Footer) */
-    --footer-text: #FFD700;  /* Dorado Claro para texto de footer */
+    --footer-text: #996515;  /* Dorado marrón para texto de footer */
 
     --font-primary: 'Playfair Display', serif;
     --font-secondary: 'Montserrat', sans-serif;
