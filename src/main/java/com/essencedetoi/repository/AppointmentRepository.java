@@ -42,4 +42,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
         @Param("end") LocalDateTime end
     );
     List<Appointment> findByStatus(AppointmentStatus status);
+    
+    @Query("SELECT a FROM Appointment a ORDER BY a.createdAt DESC")
+    List<Appointment> findAllByOrderByCreatedAtDesc();
 }

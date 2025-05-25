@@ -5,12 +5,80 @@
     <title>Editar Roles de Usuario - Essence De Toi</title>
     <style>
         .edit-user-form-container {
-            max-width: 600px;
-            margin: 40px auto;
-            padding: 25px;
-            border: 1px solid #ddd;
+            max-width: 700px;
+            margin: 50px auto;
+            padding: 30px;
+            background-image: url(/images/marble-background.jpg);
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            color: #333333;
+            position: relative;
+            overflow: hidden;
+        }
+        .edit-user-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 253, 240, 0.95);
+            z-index: 0;
+        }
+        .edit-user-form-container > * {
+            position: relative;
+            z-index: 1;
+        }
+        .edit-user-form-container a {
+            color: #996515;
+            text-decoration: none;
+        }
+        .edit-user-form-container a:hover {
+            color: #7a5012;
+            text-decoration: underline;
+        }
+        .edit-user-form-container .form-control,
+        .edit-user-form-container .form-select,
+        .edit-user-form-container .form-check-input {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #333333;
+        }
+        .edit-user-form-container .form-control:focus,
+        .edit-user-form-container .form-select:focus,
+        .edit-user-form-container .form-check-input:focus {
+            border-color: #996515;
+            box-shadow: 0 0 0 0.25rem rgba(153, 101, 21, 0.25);
+        }
+        .edit-user-form-container .form-label {
+            color: #333333;
+            font-weight: 500;
+        }
+        .edit-user-form-container .btn-primary {
+            background-color: #996515;
+            border-color: #7a5012;
+        }
+        .edit-user-form-container .btn-primary:hover {
+            background-color: #7a5012;
+            border-color: #5c3d0e;
+        }
+        .edit-user-form-container .btn-secondary {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #000000;
+            font-weight: 500;
+        }
+        .edit-user-form-container .btn-secondary:hover {
+            background-color: #bb2d3b;
+            border-color: #b02a37;
+            color: #000000;
+        }
+        .edit-user-form-container .form-check-input:checked {
+            background-color: #996515;
+            border-color: #7a5012;
         }
     </style>
 </head>
@@ -42,7 +110,7 @@
                 <input type="email" class="form-control" th:value="${user.email}" disabled readonly>
             </div>
 
-            <hr>
+            <hr style="height: 4px; background-color: #996515; border: none; margin: 2rem 0;">
 
             <div class="mb-3">
                 <label class="form-label">Roles Asignados:</label>
@@ -62,6 +130,8 @@
                  <label class="form-check-label" for="enabled">Usuario Habilitado</label>
             </div>
 
+            <hr style="height: 4px; background-color: #996515; border: none; margin: 2rem 0;">
+            
             <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
                 <a th:href="@{/admin/users}" class="btn btn-secondary me-md-2">Cancelar</a>
                 <button type="submit" class="btn btn-primary">Actualizar Roles y Estado</button>

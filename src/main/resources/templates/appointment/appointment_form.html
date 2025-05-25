@@ -6,11 +6,73 @@
     <style>
         .appointment-form-container {
             max-width: 700px;
-            margin: 40px auto;
-            padding: 25px;
-            border: 1px solid #ddd;
+            margin: 50px auto;
+            padding: 30px;
+            background-image: url(/images/marble-background.jpg);
+            background-size: cover;
+            background-position: center;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            box-shadow: 0 0 12px rgba(0,0,0,0.08);
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            color: #333333;
+            position: relative;
+            overflow: hidden;
+        }
+        .appointment-form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 253, 240, 0.95);
+            z-index: 0;
+        }
+        .appointment-form-container > * {
+            position: relative;
+            z-index: 1;
+        }
+        .appointment-form-container a {
+            color: #996515;
+            text-decoration: none;
+        }
+        .appointment-form-container a:hover {
+            color: #7a5012;
+            text-decoration: underline;
+        }
+        .appointment-form-container .form-control, 
+        .appointment-form-container .form-select {
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #333333;
+        }
+        .appointment-form-container .form-control:focus,
+        .appointment-form-container .form-select:focus {
+            border-color: #996515;
+            box-shadow: 0 0 0 0.25rem rgba(153, 101, 21, 0.25);
+        }
+        .appointment-form-container .form-label {
+            color: #333333;
+            font-weight: 500;
+        }
+        .appointment-form-container .btn-primary {
+            background-color: #996515;
+            border-color: #7a5012;
+        }
+        .appointment-form-container .btn-primary:hover {
+            background-color: #7a5012;
+            border-color: #5c3d0e;
+        }
+        .appointment-form-container .btn-secondary {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: #000000;
+            font-weight: 500;
+        }
+        .appointment-form-container .btn-secondary:hover {
+            background-color: #bb2d3b;
+            border-color: #b02a37;
+            color: #000000;
         }
     </style>
 </head>

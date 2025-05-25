@@ -34,7 +34,9 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="apt : ${appointments}" th:classappend="${apt.status.name() == 'CANCELLED_BY_CLIENT' or apt.status.name() == 'CANCELLED_BY_STYLIST' or apt.status.name() == 'CANCELLED_BY_ADMIN' ? 'table-danger' : ''}">
+                <tr th:each="apt : ${appointments}" 
+                    th:classappend="${apt.status.name() == 'COMPLETED' ? 'table-success' : 
+                                   (apt.status.name() == 'CANCELLED_BY_CLIENT' or apt.status.name() == 'CANCELLED_BY_STYLIST' or apt.status.name() == 'CANCELLED_BY_ADMIN' ? 'table-danger' : '')}">
                     <td th:text="${apt.id}"></td>
                     <td th:text="${#temporals.format(apt.appointmentDateTime, 'dd/MM/yy HH:mm')}"></td>
                     <td th:text="${apt.service.name}"></td>

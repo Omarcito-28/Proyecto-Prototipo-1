@@ -81,7 +81,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional(readOnly = true)
     public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+        return appointmentRepository.findAllByOrderByCreatedAtDesc();
     }
 
     @Override
