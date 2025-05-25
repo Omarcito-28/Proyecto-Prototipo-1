@@ -64,8 +64,25 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
+                    <!-- Selector de idiomas -->
+                    <li class="nav-item dropdown me-2">
+                        <form method="get" th:action="@{/change-language}" class="d-flex align-items-center">
+                            <select name="lang" onchange="this.form.submit()" class="form-select form-select-sm" style="width: auto;">
+                                <option value="es" th:selected="${#locale.language == 'es'}">
+                                    <span th:text="#{language.spanish}">ES</span>
+                                </option>
+                                <option value="en" th:selected="${#locale.language == 'en'}">
+                                    <span th:text="#{language.english}">EN</span>
+                                </option>
+                                <option value="pt" th:selected="${#locale.language == 'pt'}">
+                                    <span th:text="#{language.portuguese}">PT</span>
+                                </option>
+                            </select>
+                        </form>
+                    </li>
+                    
                     <li class="nav-item" sec:authorize="!isAuthenticated()">
-                        <a class="nav-link" th:href="@{/appointments/new}">Agendar Cita</a>
+                        <a class="nav-link" th:href="@{/appointments/new}" th:text="#{nav.book}">Agendar Cita</a>
                     </li>
                     <li class="nav-item" sec:authorize="!isAuthenticated()">
                             <a class="btn btn-outline-primary" th:href="@{/login}">Iniciar Sesión</a>
@@ -115,10 +132,121 @@
     </footer>
 
     <!-- jQuery (debe ir primero) -->
-    <script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+            integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+            crossorigin="anonymous"></script>
+    
     <!-- Bootstrap JS Bundle (includes Popper) -->
-    <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
-    <!-- Custom JS -->
+    <script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}" defer></script>
+    
+    <!-- Text-to-Speech JS -->
+    <script th:src="@{/js/text-to-speech.js}" defer></script>
+    
+    <!-- Main JavaScript -->
     <script th:src="@{/js/main.js}" defer></script>
+    
+    <!-- Panel de Accesibilidad -->
+    <div id="accessibility-panel">
+        <button id="accessibility-close" class="close-panel" aria-label="Cerrar panel de accesibilidad">&times;</button>
+        <h3>Lectura en Voz Alta</h3>
+        
+        <div class="accessibility-controls">
+            <div class="control-group">
+                <label for="tts-voice">Seleccionar voz:</label>
+                <select id="tts-voice" class="form-select form-select-sm">
+                    <option value="">Cargando voces...</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-row">
+                    <button id="tts-play-pause" class="btn btn-primary" aria-label="Leer página">
+                        <i class="fas fa-play"></i> <span>Leer página</span>
+                    </button>
+                    <button id="tts-stop" class="btn btn-secondary" aria-label="Detener lectura">
+                        <i class="fas fa-stop"></i> <span class="sr-only">Detener</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botón flotante de accesibilidad -->
+    <button id="accessibility-toggle" aria-label="Abrir panel de accesibilidad">
+        <i class="fas fa-universal-access"></i>
+    </button>
+    
+    <!-- Estilos de accesibilidad -->
+    <link th:href="@{/css/accessibility.css}" rel="stylesheet">
+    
+    <!-- Script de inicialización del panel de accesibilidad -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del DOM
+            const toggleBtn = document.getElementById('accessibility-toggle');
+            const closeBtn = document.getElementById('accessibility-close');
+            const panel = document.getElementById('accessibility-panel');
+            
+            // Mostrar el botón de accesibilidad
+            if (toggleBtn) {
+                toggleBtn.style.display = 'flex';
+                toggleBtn.style.opacity = '1';
+                toggleBtn.style.visibility = 'visible';
+                
+                // Alternar visibilidad del panel
+                toggleBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    panel.classList.toggle('visible');
+                    toggleBtn.setAttribute('aria-expanded', panel.classList.contains('visible'));
+                    
+                    // Enfocar el panel cuando se abre
+                    if (panel.classList.contains('visible')) {
+                        panel.focus();
+                    }
+                });
+            }
+            
+            // Cerrar el panel con el botón de cierre
+            if (closeBtn) {
+                closeBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    panel.classList.remove('visible');
+                    if (toggleBtn) {
+                        toggleBtn.setAttribute('aria-expanded', 'false');
+                        toggleBtn.focus();
+                    }
+                });
+            }
+            
+            // Cerrar el panel al presionar Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && panel.classList.contains('visible')) {
+                    panel.classList.remove('visible');
+                    if (toggleBtn) {
+                        toggleBtn.setAttribute('aria-expanded', 'false');
+                        toggleBtn.focus();
+                    }
+                }
+            });
+            
+            // Cerrar el panel al hacer clic fuera de él
+            document.addEventListener('click', function(e) {
+                if (panel.classList.contains('visible') && 
+                    !panel.contains(e.target) && 
+                    e.target !== toggleBtn && 
+                    !toggleBtn.contains(e.target)) {
+                    panel.classList.remove('visible');
+                    toggleBtn.setAttribute('aria-expanded', 'false');
+                }
+            });
+            
+            // Prevenir el cierre al hacer clic dentro del panel
+            panel.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            console.log('Panel de accesibilidad inicializado correctamente');
+        });
+    </script>
 </body>
 </html>

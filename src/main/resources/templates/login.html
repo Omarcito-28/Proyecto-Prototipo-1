@@ -59,15 +59,13 @@
 
 <div layout:fragment="content" class="container">
      <div class="login-container">
-        <h2 class="text-center mb-4">Iniciar Sesión</h2>
+        <h2 class="text-center mb-4" th:text="#{login.title}">Iniciar Sesión</h2>
 
         <div th:if="${param.error}" class="alert alert-danger">
-            Usuario o contraseña incorrectos
-            Usuario o contraseña incorrectos.
+            <span th:text="#{login.error.credentials}">Usuario o contraseña incorrectos</span>
         </div>
         <div th:if="${param.logout}" class="alert alert-success">
-            Has cerrado sesión correctamente
-            Has cerrado sesión exitosamente.
+            <span th:text="#{login.logout.success}">Has cerrado sesión correctamente</span>
         </div>
         <div th:if="${errorMessage}" class="alert alert-danger">
             <span th:text="${errorMessage}"></span>
@@ -78,24 +76,26 @@
 
         <form th:action="@{/login}" method="post">
             <div class="mb-3">
-                <label for="username" class="form-label">Nombre de Usuario o Email:</label>
+                <label for="username" class="form-label" th:text="#{login.form.username}">Nombre de Usuario o Email</label>
                 <input type="text" id="username" name="username" class="form-control" required autofocus>
             </div>
             <div class="mb-3">
-                <label for="password" class="form-label">Contraseña:</label>
+                <label for="password" class="form-label" th:text="#{login.form.password}">Contraseña</label>
                 <input type="password" id="password" name="password" class="form-control" required>
             </div>
             <!-- Spring Security maneja "remember-me" si está configurado -->
             <!-- <div class="mb-3 form-check">
                 <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
-                <label class="form-check-label" for="remember-me">Recordarme</label>
+                <label class="form-check-label" for="remember-me" th:text="#{login.form.remember}">Recordarme</label>
             </div> -->
-            <button type="submit" class="btn btn-primary w-100 mb-3">Iniciar Sesión</button>
+            <button type="submit" class="btn btn-primary w-100 mb-3" th:text="#{login.form.submit}">Iniciar Sesión</button>
         </form>
 
         <div class="text-center">
-            <p>¿No tienes una cuenta? <a th:href="@{/register}">Regístrate aquí</a></p>
-            <!-- <p><a th:href="@{/forgot-password}">¿Olvidaste tu contraseña?</a></p> -->
+            <p><span th:text="#{login.register.question}">¿No tienes una cuenta?</span> 
+               <a th:href="@{/register}" th:text="#{login.register.link}">Regístrate aquí</a>
+            </p>
+            <!-- <p><a th:href="@{/forgot-password}" th:text="#{login.forgot.password}">¿Olvidaste tu contraseña?</a></p> -->
         </div>
     </div>
 </div>

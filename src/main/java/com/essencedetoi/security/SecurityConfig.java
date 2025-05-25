@@ -47,30 +47,43 @@ public class SecurityConfig {
         logger.info("Configurando SecurityFilterChain...");
         
         http
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // Habilitar CSRF excepto para endpoints API
+                .csrf(csrf -> csrf.ignoringRequestMatchers(
+                    "/api/**",
+                    "/webjars/**",
+                    "/css/**",
+                    "/js/**",
+                    "/images/**"
+                ))
                 .authorizeHttpRequests(authorize -> authorize
-                        // Rutas públicas
-                        .requestMatchers("/", "/home", "/css/**", "/js/**", "/images/**", "/webjars/**").permitAll()
-                        .requestMatchers("/register", "/register/save").permitAll()
-                        .requestMatchers("/login", "/login-error").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/api-docs/**", "/v3/api-docs/**").permitAll() // Permitir acceso a Swagger y su config
-                        .requestMatchers("/**?lang=**").permitAll() // Permitir cambio de idioma
-                        .requestMatchers("/test-i18n").permitAll() // Ruta de prueba de internacionalización
-                        .requestMatchers("/changeLanguage").permitAll() // Permitir cambio de idioma
-
-                        // Rutas de Administrador
-                        .requestMatchers("/admin/**", "/users/**", "/services/new", "/services/edit/**", "/services/delete/**", "/appointments/all").hasRole("ADMIN")
-                        
-                        // Rutas que requieren autenticación general
-                        .requestMatchers("/dashboard").authenticated()
-                        .requestMatchers("/appointments/**").authenticated()
-                        .requestMatchers("/stylist/**").authenticated()
-                        .requestMatchers("/profile/**").authenticated()
-
-                        // Rutas con roles específicos para ver lista de servicios
-                        .requestMatchers("/services/", "/services/list").hasAnyRole("ADMIN", "STYLIST", "CLIENT")
-                        
-                        .anyRequest().authenticated()
+                    // Rutas públicas
+                    .requestMatchers(
+                        "/",
+                        "/home",
+                        "/register",
+                        "/register/save",
+                        "/login",
+                        "/login/**",
+                        "/logout",
+                        "/webjars/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**",
+                        "/change-language",
+                        "/services/list",
+                        "/services/{id}",
+                        "/appointments/available-times",
+                        "/appointments/new",
+                        "/appointments/save"
+                    ).permitAll()
+                    
+                    // Rutas de administración
+                    .requestMatchers("/admin/**").hasRole("ADMIN")
+                    
+                    // Rutas de usuario autenticado
+                    .requestMatchers("/profile/**", "/appointments/my").authenticated()
+                    
+                    // Todas las demás rutas requieren autenticación
+                    .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
