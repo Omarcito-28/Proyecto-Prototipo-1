@@ -8,7 +8,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
-
+import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
 import java.util.Locale;
 
 @Configuration
@@ -22,11 +23,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         CookieLocaleResolver resolver = new CookieLocaleResolver();
         // Establece el idioma por defecto
         resolver.setDefaultLocale(Locale.forLanguageTag("es-ES"));
-        // Configura el nombre de la cookie
+        // Nombre de la cookie
         resolver.setCookieName("lang");
-        // Establece el tiempo de vida de la cookie a 1 año (en segundos)
-        resolver.setCookieMaxAge(31536000);
-        // Hace la cookie accesible para todo el sitio
+        // Ruta de la cookie
         resolver.setCookiePath("/");
         return resolver;
     }
@@ -47,5 +46,15 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(@NonNull InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
+    }
+    
+    @Bean
+    public ResourceBundleMessageSource messageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        messageSource.setUseCodeAsDefaultMessage(true);
+        messageSource.setFallbackToSystemLocale(false);
+        return messageSource;
     }
 }

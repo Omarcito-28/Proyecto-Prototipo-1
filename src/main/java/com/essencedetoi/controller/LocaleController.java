@@ -18,7 +18,7 @@ public class LocaleController {
     private static final Map<String, Locale> SUPPORTED_LOCALES = Map.of(
         "es", Locale.forLanguageTag("es-ES"),
         "en", Locale.ENGLISH,
-        "pt", Locale.forLanguageTag("pt-PT")
+        "it", Locale.ITALIAN
     );
 
     /**

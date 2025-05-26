@@ -3,33 +3,33 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout}">
 <head>
-    <title>Bienvenido a Essence De Toi</title>
+    <title th:text="#{index.title}">Bienvenido a Essence De Toi</title>
 </head>
 <body>
 
 <div layout:fragment="content" class="container mt-4">
     <div class="p-5 mb-5 rounded-3 essence-background" style="box-shadow: 0 10px 30px rgba(0,0,0,0.3); padding: 4rem !important;">
         <div class="container-fluid py-5 text-center essence-content" style="max-width: 800px; margin: 0 auto;">
-            <h1 class="display-5 fw-bold" style="margin-bottom: 2rem;">Bienvenido a Essence De Toi</h1>
-            <p class="fs-4" style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; margin-bottom: 2rem;">
+            <h1 class="display-5 fw-bold" style="margin-bottom: 2rem;" th:text="#{index.title}">Bienvenido a Essence De Toi</h1>
+            <p class="fs-4" style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem; margin-bottom: 2rem;" th:text="#{index.welcome.subtitle}">
                 Tu oasis de belleza y bienestar. Descubre nuestros servicios exclusivos y agenda tu cita hoy mismo.
             </p>
             <div sec:authorize="!isAuthenticated()">
-                <a class="btn btn-primary btn-lg" th:href="@{/appointments/new}" role="button">Agendar Cita Ahora</a>
-                <a class="btn btn-secondary btn-lg ms-2" th:href="@{/login}" role="button">Iniciar Sesión</a>
+                <a class="btn btn-primary btn-lg" th:href="@{/appointments/new}" role="button" th:text="#{index.book.now}">Agendar Cita Ahora</a>
+                <a class="btn btn-secondary btn-lg ms-2" th:href="@{/login}" role="button" th:text="#{login.form.submit}">Iniciar Sesión</a>
             </div>
             <div sec:authorize="isAuthenticated()">
-                <a class="btn btn-info btn-lg" th:href="@{/dashboard}" role="button">Ir al Dashboard</a>
+                <a class="btn btn-info btn-lg" th:href="@{/dashboard}" role="button" th:text="#{index.dashboard}">Ir al Dashboard</a>
             </div>
         </div>
     </div>
 
     <!-- Sección de Servicios Destacados -->
     <div class="container mt-5 mb-5">
-        <h2 class="text-center mb-4" style="background-color: #1a1a1a; padding: 1rem; border-radius: 5px; color: #996515; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+        <h2 class="text-center mb-4" style="background-color: #1a1a1a; padding: 1rem; border-radius: 5px; color: #996515; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);" th:text="#{index.featured.services}">
             Nuestros Servicios Populares
         </h2>
-        <div th:if="${services == null || services.isEmpty()}" class="alert alert-info" role="alert">
+        <div th:if="${services == null || services.isEmpty()}" class="alert alert-info" role="alert" th:text="#{index.no.services}">
             Actualmente no hay servicios para mostrar. ¡Vuelve pronto!
         </div>
         <div th:if="${services != null && !services.isEmpty()}">
@@ -37,9 +37,9 @@
             <div id="servicesCarousel" class="carousel slide" data-bs-ride="carousel">
                 <!-- Indicadores -->
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="0" class="active" aria-current="true" th:aria-label="#{index.slide} + ' 1'"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="1" th:aria-label="#{index.slide} + ' 2'"></button>
+                    <button type="button" data-bs-target="#servicesCarousel" data-bs-slide-to="2" th:aria-label="#{index.slide} + ' 3'"></button>
                 </div>
                 <!-- Contenido del Carrusel -->
                 <div class="carousel-inner">
@@ -120,21 +120,21 @@
                     <!-- Primer Slide -->
                     <div class="carousel-item active">
                         <div class="content-wrapper" style="background-image: url('/images/services/manicura_clasica.jpg');">
-                            <h5 class="mb-2" th:text="${services[0].name}" style="font-size: 1.8rem; color: rgba(245, 245, 245, 0.753);">Nombre del Servicio</h5>
-                            <p class="mb-0" th:text="${services[0].description}" style="font-size: 1.3rem; color: white; line-height: 1.8;">Descripción completa.</p>
+                            <h5 class="mb-2" th:text="${services[0].name}" style="font-size: 1.8rem; color: rgba(245, 245, 245, 0.753);" th:if="${services != null && !services.isEmpty()}">Nombre del Servicio</h5>
+                            <p class="mb-0" th:text="${services[0].description}" style="font-size: 1.3rem; color: white; line-height: 1.8;" th:if="${services != null && !services.isEmpty()}">Descripción completa.</p>
                         </div>
                     </div>
                     <!-- Segundo Slide -->
                     <div class="carousel-item">
                         <div class="content-wrapper" style="background-image: url('/images/services/tintura.webp');">
-                            <h5 class="mb-2" th:text="${services[1].name}" style="font-size: 1.8rem; color: rgba(245, 245, 245, 0.753);">Nombre del Servicio</h5>
-                            <p class="mb-0" th:text="${services[1].description}" style="font-size: 1.3rem; color: white; line-height: 1.8;">Descripción completa.</p>
+                            <h5 class="mb-2" th:text="${services[1].name}" style="font-size: 1.8rem; color: rgba(245, 245, 245, 0.753);" th:if="${services != null && services.size() > 1}">Nombre del Servicio</h5>
+                            <p class="mb-0" th:text="${services[1].description}" style="font-size: 1.3rem; color: white; line-height: 1.8;" th:if="${services != null && services.size() > 1}">Descripción completa.</p>
                         </div>
                     </div>
                     <!-- Tercer Slide -->
                     <div class="carousel-item">
                         <div class="content-wrapper" style="background-image: url('/images/services/tratamiento_capilar.webp');">
-                            <a th:href="@{/services/list}" class="btn btn-light btn-lg">Ver Todos los Servicios</a>
+                            <a th:href="@{/services/list}" class="btn btn-light btn-lg" th:text="#{index.view.all.services}">Ver Todos los Servicios</a>
                         </div>
                     </div>
                 </div>
@@ -181,13 +181,13 @@
                 </style>
                 
                 <!-- Controles -->
-                <button class="carousel-control-prev" type="button" data-bs-target="#servicesCarousel" data-bs-slide="prev">
+                <button class="carousel-control-prev" type="button" data-bs-target="#servicesCarousel" data-bs-slide="prev" th:title="#{index.previous}">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Anterior</span>
+                    <span class="visually-hidden" th:text="#{index.previous}">Anterior</span>
                 </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#servicesCarousel" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#servicesCarousel" data-bs-slide="next" th:title="#{index.next}">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Siguiente</span>
+                    <span class="visually-hidden" th:text="#{index.next}">Siguiente</span>
                 </button>
             </div>
         </div>
@@ -197,17 +197,17 @@
     <div class="row align-items-md-stretch">
         <div class="col-md-6 mb-4">
             <div class="h-100 p-5 text-white bg-dark rounded-3" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
-                <h2>Nuestros Servicios</h2>
-                <p>Explora nuestra gama de tratamientos de belleza, desde cortes de cabello y coloración hasta tratamientos faciales y masajes relajantes. Usamos productos de alta calidad para asegurar los mejores resultados.</p>
-                <a class="btn btn-outline-light" th:href="@{/services/list}" role="button">Ver Servicios</a>
+                <h2 th:text="#{index.our.services}">Nuestros Servicios</h2>
+                <p th:text="#{index.services.description}">Explora nuestra gama de tratamientos de belleza, desde cortes de cabello y coloración hasta tratamientos faciales y masajes relajantes. Usamos productos de alta calidad para asegurar los mejores resultados.</p>
+                <a class="btn btn-outline-light" th:href="@{/services/list}" role="button" th:text="#{index.view.services}">Ver Servicios</a>
             </div>
         </div>
         <div class="col-md-6 mb-4">
             <div class="h-100 p-5 bg-light border rounded-3" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
-                <h2>Agenda tu Cita</h2>
-                <p>¿Lista para tu transformación? Agendar tu cita es fácil y rápido. Selecciona tu servicio, estilista preferido y el horario que más te convenga.</p>
-                <a class="btn btn-outline-secondary" th:href="@{/appointments/new}" sec:authorize="isAuthenticated()" role="button">Agendar Ahora</a>
-                <a class="btn btn-outline-secondary" th:href="@{/login}" sec:authorize="!isAuthenticated()" title="Debes iniciar sesión para agendar" role="button">Agendar Ahora</a>
+                <h2 th:text="#{index.book.appointment}">Agenda tu Cita</h2>
+                <p th:text="#{index.book.appointment.description}">¿Lista para tu transformación? Agendar tu cita es fácil y rápido. Selecciona tu servicio, estilista preferido y el horario que más te convenga.</p>
+                <a class="btn btn-outline-secondary" th:href="@{/appointments/new}" sec:authorize="isAuthenticated()" role="button" th:text="#{index.book.now.button}">Agendar Ahora</a>
+                <a class="btn btn-outline-secondary" th:href="@{/login}" sec:authorize="!isAuthenticated()" title="Debes iniciar sesión para agendar" role="button" th:text="#{index.book.now.button}">Agendar Ahora</a>
             </div>
         </div>
     </div>
@@ -217,25 +217,25 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="p-5 bg-light rounded-3" style="box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);">
-                    <h2 class="text-center mb-4">Contáctanos</h2>
+                    <h2 class="text-center mb-4" th:text="#{index.contact.title}">Contáctanos</h2>
                     <div class="text-center">
-                        <p class="mb-4">Ponte en contacto con nosotros para cualquier consulta o para agendar tu próxima visita. ¡Estamos aquí para ayudarte!</p>
+                        <p class="mb-4" th:text="#{index.contact.description}">Ponte en contacto con nosotros para cualquier consulta o para agendar tu próxima visita. ¡Estamos aquí para ayudarte!</p>
                         <div class="contact-info">
                             <div class="mb-3">
                                 <i class="fas fa-phone me-2"></i>
-                                <a href="tel:+1234567890" class="text-dark">Teléfono: +1234567890</a>
+                                <a href="tel:+1234567890" class="text-dark" th:text="#{index.contact.phone} + ' +1234567890'">Teléfono: +1234567890</a>
                             </div>
                             <div class="mb-3">
                                 <i class="fas fa-envelope me-2"></i>
-                                <a href="mailto:contacto@essencedetoi.com" class="text-dark">Email: contacto@essencedetoi.com</a>
+                                <a href="mailto:contacto@essencedetoi.com" class="text-dark" th:text="#{index.contact.email} + ' contacto@essencedetoi.com'">Email: contacto@essencedetoi.com</a>
                             </div>
                             <div class="mb-3">
                                 <i class="fas fa-map-marker-alt me-2"></i>
-                                <span>Dirección: Calle 123, Neiva, Colombia</span>
+                                <span th:text="#{index.contact.address} + ' Calle 123, Neiva, Colombia'">Dirección: Calle 123, Neiva, Colombia</span>
                             </div>
                             <div>
                                 <i class="fas fa-clock me-2"></i>
-                                <span>Horario: Lunes a Sábado: 9:00 AM - 7:00 PM</span>
+                                <span th:text="#{index.contact.schedule} + ' Lunes a Sábado: 9:00 AM - 7:00 PM'">Horario: Lunes a Sábado: 9:00 AM - 7:00 PM</span>
                             </div>
                         </div>
                     </div>
