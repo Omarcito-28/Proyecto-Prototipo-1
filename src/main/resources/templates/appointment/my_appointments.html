@@ -14,8 +14,8 @@
 
     <div th:if="${appointments.isEmpty()}">
         <p th:text="#{appointment.none}">No tienes citas programadas.</p>
-        <p sec:authorize="hasRole('CLIENT')" th:with="bookLink='<a href='' + @{/appointments/new} + ''>' + #{appointment.book.new.link} + '</a>'">
-            <span th:utext="#{appointment.would.you.like} + ' ' + ${bookLink} + '?'">¿Deseas agendar una nueva cita?</span>
+        <p sec:authorize="hasRole('CLIENT')">
+            <span th:with="bookLink=@{/appointments/new}" th:utext="#{appointment.would.you.like} + ' &lt;a href=&quot;' + ${bookLink} + '&quot;>' + #{appointment.book.new.link} + '&lt;/a>?'">¿Deseas agendar una nueva cita?</span>
         </p>
     </div>
 
@@ -55,38 +55,12 @@
                     <a th:href="@{/appointments/{id}(id=${apt.id})}" class="btn btn-sm btn-info" th:text="#{common.details}">Detalles</a>
                     <!-- Más acciones como cancelar/reprogramar podrían ir aquí -->
                     <th:block sec:authorize="hasRole('CLIENT')">
-                         <button th:if="${apt.status.name() == 'SCHEDULED' or apt.status.name() == 'PENDING_CONFIRMATION'}"
-                                type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" 
-                                th:attr="data-bs-target='#cancelAppointmentModal-'+${apt.id}"
-                                th:text="#{appointment.cancel}">
-                            Cancelar
-                        </button>
-                        <!-- Modal de Confirmación de Cancelación -->
-                        <div class="modal fade" th:id="'cancelAppointmentModal-'+${apt.id}" tabindex="-1" 
-                             th:attr="aria-labelledby='cancelAppointmentModalLabel-' + ${apt.id}" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" th:id="'cancelAppointmentModalLabel-' + ${apt.id}" th:text="#{appointment.cancel.confirm.title}">Confirmar Cancelación</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" th:attr="aria-label=#{common.close}"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <span th:with="serviceName=${apt.service?.name}, 
-                                            dateTime=${#temporals.format(apt.appointmentDateTime, 'dd/MM/yyyy') + ' ' + #messages.msg('appointment.at.time') + ' ' + #temporals.format(apt.appointmentDateTime, 'HH:mm')}"
-                                            th:if="${apt.appointmentDateTime != null}"
-                                            th:utext="#{appointment.cancel.confirm.message(${serviceName}, ${dateTime})}">
-                                            ¿Estás seguro de que deseas cancelar la cita para el servicio "<span th:text="${serviceName}"></span>" programada para el <span th:text="${dateTime}"></span>?
-                                        </span>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{common.close}">Cerrar</button>
-                                        <form th:action="@{/appointments/cancel/{id}(id=${apt.id})}" method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-danger" th:text="#{appointment.cancel.confirm.button}">Confirmar Cancelación</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <form th:action="@{/appointments/cancel/{id}(id=${apt.id})}" method="post" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que deseas cancelar esta cita?')">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-sm btn-warning" th:if="${apt.status.name() == 'SCHEDULED' or apt.status.name() == 'PENDING_CONFIRMATION'}" th:text="#{appointment.cancel}">
+                                Cancelar
+                            </button>
+                        </form>
                     </th:block>
                 </td>
             </tr>
@@ -96,4 +70,5 @@
 </div>
 
 </body>
+</html>
 </html>

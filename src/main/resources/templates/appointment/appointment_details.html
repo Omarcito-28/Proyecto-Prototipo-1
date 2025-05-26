@@ -98,30 +98,12 @@
 
                     <!-- Botón para cancelar (solo visible para clientes cuando está programada) -->
                     <div sec:authorize="hasRole('CLIENT')" th:if="${appointment.status.name() == 'SCHEDULED'}" class="mb-3">
-                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" th:attr="data-bs-target='#cancelAppointmentModal-'+${appointment.id}">
-                            <i class="bi bi-x-circle"></i> <span th:text="#{appointment.cancel_appointment}">Cancel Appointment</span>
-                        </button>
-
-                        <!-- Modal de Confirmación para Cancelar -->
-                        <div class="modal fade" th:id="'cancelAppointmentModal-'+${appointment.id}" tabindex="-1" aria-labelledby="cancelAppointmentModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" th:text="#{appointment.confirm_cancellation}">Confirm Cancellation</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <p th:text="#{appointment.confirm_cancellation_message}">Are you sure you want to cancel this appointment?</p>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{common.no}">No</button>
-                                        <form th:action="@{/appointments/cancel/{id}(id=${appointment.id})}" method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-danger" th:text="#{appointment.yes_cancel}">Yes, Cancel Appointment</button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <form th:action="@{/appointments/cancel/{id}(id=${appointment.id})}" method="post" style="display: inline;">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}" />
+                            <button type="submit" class="btn btn-warning" onclick="return confirm('¿Estás seguro de que deseas cancelar esta cita?')">
+                                <i class="bi bi-x-circle"></i> <span th:text="#{appointment.cancel_appointment}">Cancelar Cita</span>
+                            </button>
+                        </form>
                     </div>
 
                     <!-- Acciones para el Admin -->

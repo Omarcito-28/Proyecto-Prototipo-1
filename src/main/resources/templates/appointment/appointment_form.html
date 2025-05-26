@@ -100,9 +100,13 @@
                 <select id="serviceId" th:field="*{serviceId}" class="form-select"
                         th:classappend="${#fields.hasErrors('serviceId')} ? 'is-invalid' : ''" required>
                     <option value="" th:text="#{appointment.form.select_service}">Select a service...</option>
-                    <option th:each="service : ${services}" th:value="${service.id}"
+                    <option th:each="service : ${services}" 
+                            th:value="${service.id}"
                             th:with="formattedPrice=${#numbers.formatDecimal(service.price, 1, 'POINT', 2, 'COMMA')}"
-                            th:text="#{appointment.service_info(service.name, service.durationMinutes, formattedPrice)}"></option>
+                            th:data-price="${service.price}"
+                            th:data-duration="${service.durationMinutes}"
+                            th:text="${service.name} + ' - ' + ${formattedPrice} + ' COP (' + ${service.durationMinutes} + ' min)'">
+                    </option>
                 </select>
                 <div th:if="${#fields.hasErrors('serviceId')}" th:errors="*{serviceId}" class="invalid-feedback"></div>
             </div>
