@@ -2,32 +2,32 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout}">
 <head>
-    <title>Dashboard de Estilista - Essence De Toi</title>
+    <title th:text="#{stylist.dashboard.title} + ' - Essence De Toi'">Stylist Dashboard</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container py-4">
         <!-- Bienvenida -->
-        <h2 class="mb-4">Panel de Estilista - <span th:text="${currentUser.fullName}">Estilista</span></h2>
+        <h2 class="mb-4" th:text="#{stylist.dashboard.title} + ' - ' + ${currentUser.fullName}">Stylist Dashboard</h2>
 
         <!-- Citas del Día -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title h5 mb-0">Todas las Citas</h3>
+                <h3 class="card-title h5 mb-0" th:text="#{stylist.dashboard.all_appointments}">All Appointments</h3>
             </div>
             <div class="card-body">
                 <div th:if="${appointments.empty}" class="text-center py-3">
-                    <p>No tienes citas programadas.</p>
+                    <p th:text="#{stylist.dashboard.no_appointments}">No appointments scheduled.</p>
                 </div>
                 <div th:unless="${appointments.empty}" class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Hora</th>
-                                <th>Cliente</th>
-                                <th>Servicio</th>
-                                <th>Estado</th>
-                                <th>Acciones</th>
+                                <th th:text="#{stylist.dashboard.time}">Time</th>
+                                <th th:text="#{stylist.dashboard.client}">Client</th>
+                                <th th:text="#{stylist.dashboard.service}">Service</th>
+                                <th th:text="#{stylist.dashboard.status}">Status</th>
+                                <th th:text="#{dashboard.actions}">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,17 +39,21 @@
                                     <span th:class="${appointment.status == 'PENDING' ? 'badge bg-warning' : 
                                                     appointment.status == 'COMPLETED' ? 'badge bg-success' : 
                                                     appointment.status == 'CANCELLED' ? 'badge bg-danger' : 'badge bg-secondary'}"
-                                          th:text="${appointment.status}">Estado</span>
+                                          th:text="${appointment.status == 'PENDING' ? #{stylist.dashboard.appointment_status.pending} : 
+                                                  appointment.status == 'COMPLETED' ? #{stylist.dashboard.appointment_status.completed} : 
+                                                  appointment.status == 'CANCELLED' ? #{stylist.dashboard.appointment_status.cancelled} : 
+                                                  appointment.status}">Status</span>
                                 </td>
                                 <td>
                                     <div class="btn-group">
                                         <a th:href="@{/appointments/{id}(id=${appointment.id})}" 
-                                           class="btn btn-sm btn-info">Ver Detalles</a>
+                                           class="btn btn-sm btn-info"
+                                           th:text="#{dashboard.view_details}">View Details</a>
                                         <button th:if="${appointment.status == 'PENDING'}"
                                                 class="btn btn-sm btn-success"
                                                 onclick="markAsCompleted(this)"
                                                 th:data-appointment-id="${appointment.id}">
-                                            Completar
+                                            <span th:text="#{stylist.dashboard.complete}">Complete</span>
                                         </button>
                                     </div>
                                 </td>
@@ -65,14 +69,14 @@
             <div class="col-md-6">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Resumen de la Semana</h5>
+                        <h5 class="card-title" th:text="#{stylist.dashboard.weekly_summary}">Weekly Summary</h5>
                         <div class="list-group list-group-flush">
                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Citas Pendientes
+                                <span th:text="#{stylist.dashboard.pending_appointments}">Pending Appointments</span>
                                 <span class="badge bg-primary rounded-pill" th:text="${appointments.size()}">0</span>
                             </a>
                             <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                                Citas Completadas
+                                <span th:text="#{stylist.dashboard.completed_appointments}">Completed Appointments</span>
                                 <span class="badge bg-success rounded-pill" th:text="${completedAppointmentsCount}">0</span>
                             </a>
                         </div>
@@ -82,9 +86,9 @@
             <div class="col-md-6">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="card-title">Acciones Rápidas</h5>
+                        <h5 class="card-title" th:text="#{stylist.dashboard.quick_actions}">Quick Actions</h5>
                         <div class="d-grid gap-2">
-                            <a th:href="@{/appointments/my}" class="btn btn-outline-primary">Ver Todas mis Citas</a>
+                            <a th:href="@{/appointments/my}" class="btn btn-outline-primary" th:text="#{stylist.dashboard.view_all_appointments}">View All My Appointments</a>
                         </div>
                     </div>
                 </div>

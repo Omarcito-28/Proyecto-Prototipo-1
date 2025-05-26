@@ -2,33 +2,33 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{fragments/layout}">
 <head>
-    <title>Mi Dashboard - Essence De Toi</title>
+    <title th:text="#{client.dashboard.title} + ' - Essence De Toi'">My Dashboard</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div class="container py-4">
         <!-- Bienvenida -->
-        <h2 class="mb-4">Bienvenido/a, <span th:text="${currentUser.fullName}">Usuario</span></h2>
+        <h2 class="mb-4"><span th:text="#{client.dashboard.welcome}">Welcome,</span> <span th:text="${currentUser.fullName}">User</span></h2>
 
         <!-- Próximas Citas -->
         <div class="card mb-4">
             <div class="card-header">
-                <h3 class="card-title h5 mb-0">Mis Próximas Citas</h3>
+                <h3 class="card-title h5 mb-0" th:text="#{client.dashboard.upcoming_appointments}">My Upcoming Appointments</h3>
             </div>
             <div class="card-body">
                 <div th:if="${upcomingAppointments.empty}" class="text-center py-3">
-                    <p>No tienes citas programadas.</p>
-                    <a th:href="@{/appointments/new}" class="btn btn-primary">Agendar Nueva Cita</a>
+                    <p th:text="#{client.dashboard.no_appointments}">No appointments scheduled.</p>
+                    <a th:href="@{/appointments/new}" class="btn btn-primary" th:text="#{client.dashboard.book_appointment}">Book New Appointment</a>
                 </div>
                 <div th:unless="${upcomingAppointments.empty}" class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
-                                <th>Fecha</th>
-                                <th>Hora</th>
-                                <th>Servicio</th>
-                                <th>Estilista</th>
-                                <th>Acciones</th>
+                                <th th:text="#{client.dashboard.date}">Date</th>
+                                <th th:text="#{client.dashboard.time}">Time</th>
+                                <th th:text="#{client.dashboard.service}">Service</th>
+                                <th th:text="#{client.dashboard.stylist}">Stylist</th>
+                                <th th:text="#{dashboard.actions}">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -38,7 +38,7 @@
                                 <td th:text="${appointment.service.name}">Corte de Cabello</td>
                                 <td th:text="${appointment.stylist.fullName}">Estilista</td>
                                 <td>
-                                    <a th:href="@{/appointments/{id}(id=${appointment.id})}" class="btn btn-sm btn-info">Ver Detalles</a>
+                                    <a th:href="@{/appointments/{id}(id=${appointment.id})}" class="btn btn-sm btn-info" th:text="#{client.dashboard.view_details}">View Details</a>
                                 </td>
                             </tr>
                         </tbody>
@@ -52,27 +52,27 @@
             <div class="col-md-4">
                 <div class="card h-100">
                     <div class="card-body text-center">
-                        <h5 class="card-title">Nueva Cita</h5>
-                        <p class="card-text">Agenda una nueva cita con nuestros profesionales.</p>
-                        <a th:href="@{/appointments/new}" class="btn btn-primary">Agendar Cita</a>
+                        <h5 class="card-title" th:text="#{client.dashboard.new_appointment}">New Appointment</h5>
+                        <p class="card-text" th:text="#{client.dashboard.new_appointment_text}">Book a new appointment with our professionals.</p>
+                        <a th:href="@{/appointments/new}" class="btn btn-primary" th:text="#{client.dashboard.book_appointment}">Book Appointment</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card h-100">
                     <div class="card-body text-center">
-                        <h5 class="card-title">Mis Citas</h5>
-                        <p class="card-text">Ver el historial completo de tus citas.</p>
-                        <a th:href="@{/appointments/my}" class="btn btn-outline-primary">Ver Historial</a>
+                        <h5 class="card-title" th:text="#{client.dashboard.my_appointments}">My Appointments</h5>
+                        <p class="card-text" th:text="#{client.dashboard.my_appointments_text}">View your complete appointment history.</p>
+                        <a th:href="@{/appointments/my}" class="btn btn-outline-primary" th:text="#{client.dashboard.view_history}">View History</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card h-100">
                     <div class="card-body text-center">
-                        <h5 class="card-title">Servicios</h5>
-                        <p class="card-text">Explora nuestros servicios disponibles.</p>
-                        <a th:href="@{/services/list}" class="btn btn-outline-primary">Ver Servicios</a>
+                        <h5 class="card-title" th:text="#{client.dashboard.services}">Services</h5>
+                        <p class="card-text" th:text="#{client.dashboard.services_text}">Explore our available services.</p>
+                        <a th:href="@{/services/list}" class="btn btn-outline-primary" th:text="#{client.dashboard.view_services}">View Services</a>
                     </div>
                 </div>
             </div>

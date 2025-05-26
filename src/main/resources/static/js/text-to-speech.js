@@ -323,15 +323,23 @@ class TextToSpeech {
 document.addEventListener('DOMContentLoaded', () => {
     // Mostrar mensaje de depuración
     console.log('Inicializando Text-to-Speech...');
-    
-    // Inicializar el objeto TTS global
-    window.tts = new TextToSpeech();
-    
-    // Configurar eventos de los controles
+
+    // Inicializar el objeto TTS
+    if (!window.tts) {
+        window.tts = new TextToSpeech();
+    }
+
+    // Obtener referencias a los elementos del DOM
     const playPauseBtn = document.getElementById('tts-play-pause');
     const stopBtn = document.getElementById('tts-stop');
+    const rateInput = document.getElementById('tts-rate');
+    const rateValue = document.getElementById('tts-rate-value');
+    const pitchInput = document.getElementById('tts-pitch');
+    const pitchValue = document.getElementById('tts-pitch-value');
+    const volumeInput = document.getElementById('tts-volume');
+    const volumeValue = document.getElementById('tts-volume-value');
     const voiceSelect = document.getElementById('tts-voice');
-    
+
     // Función para leer el contenido de la página
     const readPageContent = () => {
         console.log('Leyendo contenido de la página...');

@@ -2,7 +2,8 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{fragments/layout}">
 <head>
-    <title th:text="'Detalles de la Cita #' + ${appointment.id}">Detalles de la Cita</title>
+    <title th:text="#{appointment.details.title} + ' #' + ${appointment.id}" th:unless="${appointment == null}">Appointment Details</title>
+    <title th:text="#{appointment.not_found}" th:if="${appointment == null}">Appointment Not Found</title>
     <style>
         .details-card {
             max-width: 800px;
@@ -21,59 +22,61 @@
 <div layout:fragment="content" class="container mt-4">
     <div class="card details-card">
         <div class="card-header bg-dark text-white">
-            Detalles de la Cita #<span th:text="${appointment.id}"></span>
+            <span th:text="#{appointment.details.title}">Appointment Details</span> #<span th:text="${appointment.id}"></span>
         </div>
         <div class="card-body">
             <div th:if="${appointment == null}">
-                <div class="alert alert-warning">No se encontró la cita solicitada.</div>
-                <a th:href="@{/appointments/my}" class="btn btn-primary">Mis Citas</a>
+                <div class="alert alert-warning" th:text="#{appointment.not_found}">Appointment not found.</div>
+                <a th:href="@{/appointments/my}" class="btn btn-primary" th:text="#{appointment.my_appointments}">My Appointments</a>
             </div>
 
             <div th:if="${appointment != null}">
-                <h5 class="card-title">Información General</h5>
+                <h5 class="card-title" th:text="#{appointment.general_info}">General Information</h5>
                 <ul class="list-group list-group-flush mb-4">
                     <li class="list-group-item">
-                        <strong>Servicio:</strong> <span th:text="${appointment.service.name}"></span>
+                            <strong th:text="#{appointment.service} + ':'">Service:</strong> <span th:text="${appointment.service.name}"></span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Fecha y Hora:</strong> <span th:text="${#temporals.format(appointment.appointmentDateTime, 'dd/MM/yyyy HH:mm')}"></span>
+                            <strong th:text="#{appointment.datetime} + ':'">Date and Time:</strong> <span th:text="${#temporals.format(appointment.appointmentDateTime, 'dd/MM/yyyy HH:mm')}"></span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Duración Estimada:</strong> <span th:text="${appointment.service.durationMinutes}"></span> minutos
+                            <strong th:text="#{appointment.duration} + ':'">Estimated Duration:</strong> 
+                            <span th:text="${appointment.service.durationMinutes} + ' ' + #{appointment.minutes}">minutes</span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Precio del Servicio:</strong> COP $<span th:text="${#numbers.formatDecimal(appointment.service.price, 1, 'POINT', 2, 'COMMA')}"></span>
+                            <strong th:text="#{appointment.service_price} + ':'">Service Price:</strong> 
+                            <span th:text="'COP $' + ${#numbers.formatDecimal(appointment.service.price, 1, 'POINT', 2, 'COMMA')}"></span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Estado:</strong>
+                        <strong th:text="#{appointment.status} + ':'">Estado:</strong>
                         <span class="badge" th:with="status=${appointment.status.name()}">
                             <th:block th:switch="${status}">
-                                <span th:case="'SCHEDULED'" class="bg-primary">Programada</span>
-                                <span th:case="'COMPLETED'" class="bg-success">Completada</span>
-                                <span th:case="'CANCELLED_BY_CLIENT'" class="bg-danger">Cancelada por Cliente</span>
-                                <span th:case="'CANCELLED_BY_STYLIST'" class="bg-danger">Cancelada por Estilista</span>
-                                <span th:case="'CANCELLED_BY_ADMIN'" class="bg-danger">Cancelada por Admin</span>
-                                <span th:case="*" class="bg-warning">Desconocido</span>
+                                <span th:case="'SCHEDULED'" class="bg-primary" th:text="#{appointment.status.scheduled}">Scheduled</span>
+                                <span th:case="'COMPLETED'" class="bg-success" th:text="#{appointment.status.completed}">Completed</span>
+                                <span th:case="'CANCELLED_BY_CLIENT'" class="bg-danger" th:text="#{appointment.status.cancelled_by_client}">Cancelled by Client</span>
+                                <span th:case="'CANCELLED_BY_STYLIST'" class="bg-danger" th:text="#{appointment.status.cancelled_by_stylist}">Cancelled by Stylist</span>
+                                <span th:case="'CANCELLED_BY_ADMIN'" class="bg-danger" th:text="#{appointment.status.cancelled_by_admin}">Cancelled by Admin</span>
+                                <span th:case="*" class="bg-warning" th:text="#{appointment.status.unknown}">Unknown</span>
                             </th:block>
                         </span>
                     </li>
                 </ul>
 
-                <h5 class="card-title mt-4">Participantes</h5>
+                <h5 class="card-title mt-4" th:text="#{appointment.participants}">Participants</h5>
                 <ul class="list-group list-group-flush mb-4">
                     <li class="list-group-item">
-                        <strong>Cliente:</strong> <span th:text="${appointment.client.fullName}"></span>
-                         (<a th:href="'mailto:' + ${appointment.client.email}" th:text="${appointment.client.email}" style="color: var(--primary-color); text-decoration: none;"></a>)
-                        <span th:if="${appointment.client.phoneNumber}">, Tel: <span th:text="${appointment.client.phoneNumber}"></span></span>
+                        <strong th:text="#{appointment.client} + ':'">Client:</strong> <span th:text="${appointment.client?.fullName}"></span>
+                         (<a th:href="'mailto:' + ${appointment.client?.email}" th:text="${appointment.client?.email}" style="color: var(--primary-color); text-decoration: none;"></a>)
+                        <span th:if="${appointment.client?.phoneNumber}">, <span th:text="#{appointment.phone}">Tel:</span> <span th:text="${appointment.client.phoneNumber}"></span></span>
                     </li>
                     <li class="list-group-item">
-                        <strong>Estilista:</strong> <span th:text="${appointment.stylist.fullName}"></span>
-                          (<a th:href="'mailto:' + ${appointment.stylist.email}" th:text="${appointment.stylist.email}" style="color: var(--primary-color); text-decoration: none;"></a>)
+                        <strong th:text="#{appointment.stylist} + ':'">Stylist:</strong> <span th:text="${appointment.stylist?.fullName}"></span>
+                          (<a th:href="'mailto:' + ${appointment.stylist?.email}" th:text="${appointment.stylist?.email}" style="color: var(--primary-color); text-decoration: none;"></a>)
                     </li>
                 </ul>
 
                 <div th:if="${appointment.notes != null && !appointment.notes.isBlank()}">
-                    <h5 class="card-title mt-4">Notas Adicionales</h5>
+                    <h5 class="card-title mt-4" th:text="#{appointment.notes}">Additional Notes</h5>
                     <p class="card-text" th:text="${appointment.notes}"></p>
                 </div>
 
@@ -81,14 +84,14 @@
 
                 <!-- Acciones disponibles según el rol y estado -->
                 <div class="mt-4">
-                    <h5>Acciones Disponibles</h5>
+                    <h5 th:text="#{appointment.available_actions}">Available Actions</h5>
                     
                     <!-- Botón para marcar como completada (solo visible para estilistas y admin cuando está programada) -->
                     <div sec:authorize="hasAnyRole('STYLIST', 'ADMIN')" th:if="${appointment.status.name() == 'SCHEDULED'}" class="mb-3">
                          <form th:action="@{/appointments/complete/{id}(id=${appointment.id})}" method="post" style="display: inline;">
                              <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                              <button type="submit" class="btn btn-success">
-                                 <i class="bi bi-check-circle"></i> Marcar como Completada
+                                 <i class="bi bi-check-circle"></i> <span th:text="#{appointment.mark_as_completed}">Mark as Completed</span>
                              </button>
                          </form>
                     </div>
@@ -96,7 +99,7 @@
                     <!-- Botón para cancelar (solo visible para clientes cuando está programada) -->
                     <div sec:authorize="hasRole('CLIENT')" th:if="${appointment.status.name() == 'SCHEDULED'}" class="mb-3">
                         <button type="button" class="btn btn-warning" data-bs-toggle="modal" th:attr="data-bs-target='#cancelAppointmentModal-'+${appointment.id}">
-                            <i class="bi bi-x-circle"></i> Cancelar Cita
+                            <i class="bi bi-x-circle"></i> <span th:text="#{appointment.cancel_appointment}">Cancel Appointment</span>
                         </button>
 
                         <!-- Modal de Confirmación para Cancelar -->
@@ -104,16 +107,16 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h5 class="modal-title">Confirmar Cancelación</h5>
+                                        <h5 class="modal-title" th:text="#{appointment.confirm_cancellation}">Confirm Cancellation</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        ¿Está seguro que desea cancelar esta cita?
+                                        <p th:text="#{appointment.confirm_cancellation_message}">Are you sure you want to cancel this appointment?</p>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" th:text="#{common.no}">No</button>
                                         <form th:action="@{/appointments/cancel/{id}(id=${appointment.id})}" method="post" style="display: inline;">
-                                            <button type="submit" class="btn btn-warning">Sí, Cancelar</button>
+                                            <button type="submit" class="btn btn-danger" th:text="#{appointment.yes_cancel}">Yes, Cancel Appointment</button>
                                         </form>
                                     </div>
                                 </div>
@@ -130,8 +133,8 @@
 
 
                 <div class="mt-4">
-                    <a th:href="@{/appointments/my}" class="btn btn-outline-secondary">Volver a Mis Citas</a>
-                    <a th:href="@{/appointments/all}" sec:authorize="hasRole('ADMIN')" class="btn btn-outline-secondary ms-2">Ver Todas las Citas</a>
+                    <a th:href="@{/appointments/my}" class="btn btn-outline-secondary" th:text="#{appointment.back_to_my_appointments}">Back to My Appointments</a>
+                    <a th:href="@{/appointments/all}" sec:authorize="hasRole('ADMIN')" class="btn btn-outline-secondary ms-2" th:text="#{appointment.view_all_appointments}">View All Appointments</a>
                 </div>
             </div>
         </div>

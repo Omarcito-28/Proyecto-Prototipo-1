@@ -33,33 +33,33 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/}">Inicio</a>
+                        <a class="nav-link" th:href="@{/}" th:text="#{nav.home}">Home</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
+                        <a class="nav-link" th:href="@{/dashboard}" th:text="#{dashboard}">Dashboard</a>
                     </li>
                     <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" th:href="@{/appointments/my}">Mis Citas</a>
+                        <a class="nav-link" th:href="@{/appointments/my}" th:text="#{dashboard.my_appointments}">My Appointments</a>
                     </li>
                     <li class="nav-item" sec:authorize="hasRole('CLIENT')">
-                        <a class="nav-link" th:href="@{/appointments/new}">Agendar Cita</a>
+                        <a class="nav-link" th:href="@{/appointments/new}" th:text="#{nav.book}">Book Appointment</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/services/list}">Servicios</a>
+                        <a class="nav-link" th:href="@{/services/list}" th:text="#{nav.services}">Services</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/#contact-section}">Contáctanos</a>
+                        <a class="nav-link" th:href="@{/#contact-section}" th:text="#{nav.contact}">Contact Us</a>
                     </li>
 
                     <!-- Admin Menu -->
                     <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
-                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Administración
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" th:text="#{nav.admin}">
+                            Administration
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="adminDropdownMenuLink">
-                            <li><a class="dropdown-item" th:href="@{/admin/dashboard}">Dashboard Admin</a></li>
-                            <li><a class="dropdown-item" th:href="@{/admin/users}">Gestionar Usuarios</a></li>
-                            <li><a class="dropdown-item" th:href="@{/appointments/all}">Todas las Citas</a></li>
+                            <li><a class="dropdown-item" th:href="@{/admin/dashboard}" th:text="#{nav.admin_dashboard}">Admin Dashboard</a></li>
+                            <li><a class="dropdown-item" th:href="@{/admin/users}" th:text="#{nav.manage_users}">Manage Users</a></li>
+                            <li><a class="dropdown-item" th:href="@{/appointments/all}" th:text="#{nav.all_appointments}">All Appointments</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -85,18 +85,18 @@
                         <a class="nav-link" th:href="@{/appointments/new}" th:text="#{nav.book}">Agendar Cita</a>
                     </li>
                     <li class="nav-item" sec:authorize="!isAuthenticated()">
-                            <a class="btn btn-outline-primary" th:href="@{/login}">Iniciar Sesión</a>
+                            <a class="btn btn-outline-primary" th:href="@{/login}" th:text="#{nav.login}">Login</a>
                     </li>
                     <li class="nav-item dropdown" sec:authorize="isAuthenticated()">
                         <a class="nav-link dropdown-toggle" href="#" id="userDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span sec:authentication="name">Usuario</span>
+                            <span sec:authentication="name"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdownMenuLink">
                             <!-- <li><a class="dropdown-item" th:href="@{/profile}">Mi Perfil</a></li> -->
                             <!-- <li><hr class="dropdown-divider"></li> -->
                             <li>
                                 <form th:action="@{/logout}" method="post" style="display: inline;">
-                                    <button type="submit" class="dropdown-item">Cerrar Sesión</button>
+                                    <button type="submit" class="dropdown-item" th:text="#{nav.logout}">Logout</button>
                                 </form>
                             </li>
                         </ul>
@@ -143,7 +143,7 @@
     <script th:src="@{/js/text-to-speech.js}" defer></script>
     
     <!-- Main JavaScript -->
-    <script th:src="@{/js/main.js}" defer></script>
+    <script th:src="@{/js/main-fixed.js}" defer></script>
     
     <!-- Panel de Accesibilidad -->
     <div id="accessibility-panel">
