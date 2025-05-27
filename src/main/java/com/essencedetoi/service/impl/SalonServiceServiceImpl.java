@@ -1,16 +1,15 @@
 package com.essencedetoi.service.impl;
 
 import com.essencedetoi.dto.ServiceDto;
-import com.essencedetoi.model.Service; // La entidad Service
+import com.essencedetoi.model.Service; 
 import com.essencedetoi.repository.ServiceRepository;
 import com.essencedetoi.service.SalonServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service; // Esta anotación debe ser @Service
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@org.springframework.stereotype.Service // Asegurando que sea un bean de servicio
+@org.springframework.stereotype.Service 
 public class SalonServiceServiceImpl implements SalonServiceService {
 
     private final ServiceRepository serviceRepository;
@@ -52,7 +51,6 @@ public class SalonServiceServiceImpl implements SalonServiceService {
         Service existingService = serviceRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Servicio no encontrado con id: " + id));
 
-        // Verificar si el nuevo nombre ya existe para otro servicio
         Optional<Service> serviceWithNewName = serviceRepository.findByName(serviceDto.getName());
         if (serviceWithNewName.isPresent() && !serviceWithNewName.get().getId().equals(id)) {
             throw new IllegalArgumentException("Otro servicio ya existe con el nombre: " + serviceDto.getName());

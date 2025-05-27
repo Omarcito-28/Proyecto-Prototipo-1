@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserService extends UserDetailsService { // Extiende UserDetailsService para la integración con Spring Security
+public interface UserService extends UserDetailsService { 
 
     User save(UserRegistrationDto registrationDto);
     User registerNewUser(UserRegistrationDto registrationDto, String roleName);
@@ -20,7 +20,7 @@ public interface UserService extends UserDetailsService { // Extiende UserDetail
     List<User> findAllUsers();
     List<User> findAllClients();
     List<User> findAllStylists();
-    User updateUser(Long id, User userDetails); // Podríamos usar un DTO aquí también
+    User updateUser(Long id, User userDetails); 
     void deleteUser(Long id);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);

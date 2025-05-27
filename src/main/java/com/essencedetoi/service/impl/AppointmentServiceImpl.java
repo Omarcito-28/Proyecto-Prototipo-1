@@ -152,7 +152,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         if (!existingAppointment.getClient().getId().equals(requestingUser.getId()) && !isAdmin) {
             throw new AccessDeniedException("No tiene permisos para modificar esta cita.");
         }
-        // Clientes no pueden cambiar el estilista o servicio tan fácilmente, o la fecha a una ya pasada.
+        
         // Admin podría tener más permisos.
 
         User stylist = userRepository.findById(appointmentDto.getStylistId())
@@ -168,7 +168,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         existingAppointment.setService(service);
         existingAppointment.setAppointmentDateTime(appointmentDto.getAppointmentDateTime());
         existingAppointment.setNotes(appointmentDto.getNotes());
-        // El estado no se cambia directamente aquí, sino por acciones específicas
+        
 
         // Validar la fecha antes de guardar
         BeanPropertyBindingResult errors = new BeanPropertyBindingResult(existingAppointment, "appointment");
@@ -242,12 +242,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         LocalDateTime desiredEndTime = desiredDateTime.plusMinutes(durationMinutes);
 
-        // Obtener todas las citas del estilista para ese día podrían ser muchas.
-        // Sería más eficiente si la consulta al repositorio pudiera filtrar por un rango de tiempo más ajustado.
-        // Por simplicidad aquí, filtramos en memoria después de obtener citas en un rango amplio si es necesario.
-        // Idealmente, el repositorio tendría un método como:
-        // findByStylistAndAppointmentDateTimeBetween(stylist, desiredDateTime.minusHours(X), desiredDateTime.plusHours(Y))
-        
         List<Appointment> stylistAppointments = appointmentRepository
             .findByStylistAndAppointmentDateTimeBetween(stylist, desiredDateTime.toLocalDate().atStartOfDay(), desiredDateTime.toLocalDate().plusDays(1).atStartOfDay());
 

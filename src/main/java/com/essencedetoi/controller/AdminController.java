@@ -17,8 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/admin") // Todas las rutas en este controlador comenzarán con /admin
-@PreAuthorize("hasRole('ADMIN')") // Requiere rol ADMIN para todas las rutas aquí
+@RequestMapping("/admin") 
+@PreAuthorize("hasRole('ADMIN')") 
 public class AdminController {
 
     private final UserService userService;
@@ -33,18 +33,18 @@ public class AdminController {
     @GetMapping("/dashboard")
     public String adminDashboard(Model model) {
         // Podríamos cargar datos específicos para el dashboard del admin
-        long totalUsers = userService.findAllUsers().size(); // Método findAllUsers() debe existir en UserService
+        long totalUsers = userService.findAllUsers().size(); 
         model.addAttribute("totalUsers", totalUsers);
-        // model.addAttribute("activePage", "adminDashboard");
-        return "admin/admin_dashboard"; // src/main/resources/templates/admin/admin_dashboard.html
+        
+        return "admin/admin_dashboard"; 
     }
 
     @GetMapping("/users")
     public String listUsers(Model model) {
-        List<User> users = userService.findAllUsers(); // Método findAllUsers() debe existir en UserService
+        List<User> users = userService.findAllUsers(); 
         model.addAttribute("users", users);
-        // model.addAttribute("activePage", "userManagement");
-        return "admin/admin_user_list"; // Corregido: src/main/resources/templates/admin/admin_user_list.html
+        
+        return "admin/admin_user_list"; 
     }
 
     @GetMapping("/users/edit/{userId}")

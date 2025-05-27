@@ -36,13 +36,13 @@
                                 <td th:text="${appointment.client.fullName}">Cliente</td>
                                 <td th:text="${appointment.service.name}">Servicio</td>
                                 <td>
-                                    <span th:class="${appointment.status == 'PENDING' ? 'badge bg-warning' : 
-                                                    appointment.status == 'COMPLETED' ? 'badge bg-success' : 
-                                                    appointment.status == 'CANCELLED' ? 'badge bg-danger' : 'badge bg-secondary'}"
-                                          th:text="${appointment.status == 'PENDING' ? #{stylist.dashboard.appointment_status.pending} : 
-                                                  appointment.status == 'COMPLETED' ? #{stylist.dashboard.appointment_status.completed} : 
-                                                  appointment.status == 'CANCELLED' ? #{stylist.dashboard.appointment_status.cancelled} : 
-                                                  appointment.status}">Status</span>
+                                    <span th:with="status=${appointment.status}"
+                                          th:switch="${status}">
+                                        <span th:case="'PENDING'" class="badge bg-warning" th:text="#{stylist.dashboard.appointment_status.pending}">Pendiente</span>
+                                        <span th:case="'COMPLETED'" class="badge bg-success" th:text="#{stylist.dashboard.appointment_status.completed}">Completada</span>
+                                        <span th:case="'CANCELLED'" class="badge bg-danger" th:text="#{stylist.dashboard.appointment_status.cancelled}">Cancelada</span>
+                                        <span th:case="*" class="badge bg-secondary" th:text="${status}">Estado</span>
+                                    </span>
                                 </td>
                                 <td>
                                     <div class="btn-group">

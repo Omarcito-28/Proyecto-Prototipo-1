@@ -2,7 +2,7 @@
 #accessibility-panel {
     position: fixed !important;
     top: 50% !important;
-    right: -350px !important; /* Inicialmente oculto */
+    right: -350px !important; 
     transform: translateY(-50%) !important;
     width: 320px !important;
     max-height: 90vh !important;
@@ -20,12 +20,9 @@
     right: 0 !important;
 }
 
-/* Estilo para cuando el panel está abierto */
 #accessibility-panel.visible {
     right: 0 !important;
 }
-
-/* Estilos para el botón de cierre */
 #accessibility-close {
     position: absolute !important;
     top: 10px !important;
@@ -43,7 +40,6 @@
     color: #343a40 !important;
 }
 
-/* Contenedor de controles */
 .accessibility-controls {
     margin-bottom: 20px !important;
     padding-bottom: 15px !important;

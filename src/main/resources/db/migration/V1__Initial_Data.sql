@@ -62,8 +62,6 @@ INSERT INTO roles (name) VALUES ('ROLE_STYLIST') ON CONFLICT (name) DO NOTHING;
 INSERT INTO roles (name) VALUES ('ROLE_ADMIN') ON CONFLICT (name) DO NOTHING;
 
 -- Contraseña de ejemplo para todos los usuarios: 'password123'
--- Hash Bcrypt: '$2a$10$Ih7.mjdYeAryY4.OJmdiNe9GAq0jzIDqd8TYBfQS65iOcyBYs2um6'
-
 -- Usuario Administrador
 INSERT INTO users (username, password, email, full_name, phone_number, enabled) VALUES ('admin', '$2a$10$Ih7.mjdYeAryY4.OJmdiNe9GAq0jzIDqd8TYBfQS65iOcyBYs2um6', 'admin@essencedetoi.com', 'Admin Principal', '000000000', true);
 
@@ -82,7 +80,9 @@ INSERT INTO user_roles (user_id, role_id) VALUES ((SELECT id from users where us
 INSERT INTO user_roles (user_id, role_id) VALUES ((SELECT id from users where username='estilista.sofia'), (SELECT id from roles where name='ROLE_STYLIST'));
 INSERT INTO user_roles (user_id, role_id) VALUES ((SELECT id from users where username='cliente.laura'), (SELECT id from roles where name='ROLE_CLIENT'));
 
--- Ejemplo de servicios
+-- Servicios
 INSERT INTO services (name, description, price, duration_minutes) VALUES ('Corte de Cabello Damas', 'Incluye lavado y secado básico', 25.00, 60);
 INSERT INTO services (name, description, price, duration_minutes) VALUES ('Manicura Clásica', 'Limado, cutículas y esmaltado', 15.00, 45);
 INSERT INTO services (name, description, price, duration_minutes) VALUES ('Tinturación del Cabello', 'Aplicación profesional de tinte para cambiar o realzar el color del cabello, incluyendo asesoría personalizada.', 85.00, 90);
+INSERT INTO services (name, description, price, duration_minutes) VALUES ('Peinado y Maquillaje para Eventos', 'Peinado elaborado y maquillaje profesional para eventos especiales, incluye prueba previa.', 280000.00, 120);
+INSERT INTO services (name, description, price, duration_minutes) VALUES ('Tratamiento Capilar Hidratante', 'Tratamiento profundo para restaurar el cabello dañado, incluye masaje capilar y terapia de calor.', 120000.00, 60);
